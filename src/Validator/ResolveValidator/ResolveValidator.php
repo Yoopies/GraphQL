@@ -37,19 +37,16 @@ class ResolveValidator implements ResolveValidatorInterface
     {
         $this->executionContext = $executionContext;
     }
-    
+
     public function assetTypeHasField(AbstractType $objectType, AstFieldInterface $ast)
     {
         /** @var AbstractObjectType $objectType */
         if ($this->executionContext->getField($objectType, $ast->getName()) !== null) {
             return;
         }
-        
+
         if (!(TypeService::isObjectType($objectType) || TypeService::isInputObjectType($objectType)) || !$objectType->hasField($ast->getName())) {
-            $availableFieldNames = implode(', ', array_map(function (FieldInterface $field) {
-                return sprintf('"%s"', $field->getName());
-            }, $objectType->getFields()));
-            throw new ResolveException(sprintf('Field "%s" not found in type "%s". Available fields are: %s', $ast->getName(), $objectType->getNamedType()->getName(), $availableFieldNames), $ast->getLocation());
+            throw new ResolveException(sprintf('Field "%s" not found in type "%s".', $ast->getName(), $objectType->getNamedType()->getName()), $ast->getLocation());
         }
     }
 
