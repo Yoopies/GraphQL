@@ -2,7 +2,7 @@
 
 namespace Youshido\Tests\Issues\Issue90;
 
-use Youshido\GraphQL\Execution\Processor;
+use PHPUnit\Framework\TestCase;use Youshido\GraphQL\Execution\Processor;
 use Youshido\Tests\Issues\Issue90\Issue90Schema;
 
 /**
@@ -10,7 +10,7 @@ use Youshido\Tests\Issues\Issue90\Issue90Schema;
  * Date: 25/11/16
  * Time: 9.39
  */
-class Issue90Test extends \PHPUnit_Framework_TestCase
+class Issue90Test extends TestCase
 {
 
     public function testQueryDateTimeTypeWithDateParameter()

@@ -8,11 +8,11 @@
 
 namespace Youshido\Tests\Library\Relay;
 
-
+use PHPUnit\Framework\TestCase;
 use InvalidArgumentException;
 use Youshido\GraphQL\Relay\Node;
 
-class NodeTest extends \PHPUnit_Framework_TestCase
+class NodeTest extends TestCase
 {
     public function testMethods()
     {

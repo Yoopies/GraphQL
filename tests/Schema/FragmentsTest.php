@@ -2,7 +2,7 @@
 
 namespace Youshido\Tests\Schema;
 
-use Youshido\GraphQL\Config\Object\InterfaceTypeConfig;
+use PHPUnit\Framework\TestCase;use Youshido\GraphQL\Config\Object\InterfaceTypeConfig;
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Execution\Processor;
 use Youshido\GraphQL\Schema\Schema;
@@ -85,7 +85,7 @@ class ReservationInterface extends AbstractInterfaceType
 
 }
 
-class FragmentsTest extends \PHPUnit_Framework_TestCase
+class FragmentsTest extends TestCase
 {
 
     /**

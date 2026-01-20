@@ -8,14 +8,14 @@
 
 namespace Youshido\Tests\Library\Type;
 
-use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
+use PHPUnit\Framework\TestCase;use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 use Youshido\GraphQL\Type\Scalar\DateTimeType;
 use Youshido\GraphQL\Type\Scalar\StringType;
 use Youshido\GraphQL\Type\TypeFactory;
 use Youshido\GraphQL\Type\TypeMap;
 use Youshido\GraphQL\Type\TypeService;
 
-class ScalarTypeTest extends \PHPUnit_Framework_TestCase
+class ScalarTypeTest extends TestCase
 {
 
     public function testScalarPrimitives()

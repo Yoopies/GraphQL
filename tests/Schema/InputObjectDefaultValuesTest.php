@@ -2,7 +2,7 @@
 
 namespace Youshido\Tests\Schema;
 
-use Youshido\GraphQL\Execution\Processor;
+use PHPUnit\Framework\TestCase;use Youshido\GraphQL\Execution\Processor;
 use Youshido\GraphQL\Schema\Schema;
 use Youshido\GraphQL\Type\Enum\EnumType;
 use Youshido\GraphQL\Type\InputObject\InputObjectType;
@@ -13,7 +13,7 @@ use Youshido\GraphQL\Type\Scalar\DateTimeTzType;
 use Youshido\GraphQL\Type\Scalar\IntType;
 use Youshido\GraphQL\Type\Scalar\StringType;
 
-class InputObjectDefaultValuesTest extends \PHPUnit_Framework_TestCase
+class InputObjectDefaultValuesTest extends TestCase
 {
 
     public function testDefaultEnum()

@@ -7,7 +7,7 @@
 
 namespace Youshido\Tests\Parser;
 
-use Youshido\GraphQL\Parser\Ast\Argument;
+use PHPUnit\Framework\TestCase;use Youshido\GraphQL\Parser\Ast\Argument;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\InputList;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\InputObject;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\Literal;
@@ -33,7 +33,7 @@ class TokenizerTestingParser extends Parser {
     }
 }
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class ParserTest extends TestCase
 {
 
     public function testEmptyParser()

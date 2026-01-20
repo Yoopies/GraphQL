@@ -8,7 +8,7 @@
 
 namespace Youshido\Tests\Schema;
 
-use Youshido\GraphQL\Config\Schema\SchemaConfig;
+use PHPUnit\Framework\TestCase;use Youshido\GraphQL\Config\Schema\SchemaConfig;
 use Youshido\GraphQL\Execution\DeferredResolver;
 use Youshido\GraphQL\Execution\Processor;
 use Youshido\GraphQL\Field\Field;
@@ -186,7 +186,7 @@ class DeferredSchema extends AbstractSchema
 /**
  * Test the deferred resolving under different circumstances.
  */
-class DeferredTest extends \PHPUnit_Framework_TestCase
+class DeferredTest extends TestCase
 {
 
     /**
