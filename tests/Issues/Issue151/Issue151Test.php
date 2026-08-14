@@ -63,7 +63,7 @@ class Issue151Test extends TestCase
             ]),
         ]);
         $processor = new Processor($schema);
-        $processor->processPayload('
+        $response = $processor->processPayload('
 {
     list {
         ...UnitFragment
@@ -84,5 +84,6 @@ fragment UnitFragment on Union {
 }
         ')->getResponseData();
 
+        $this->assertArrayNotHasKey('errors', $response);
     }
 }

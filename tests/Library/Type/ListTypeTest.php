@@ -35,6 +35,7 @@ class ListTypeTest extends TestCase
 
     public function testListOfInputsWithArguments(): void
     {
+        $this->expectNotToPerformAssertions();
 
     }
 

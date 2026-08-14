@@ -130,7 +130,9 @@ TEXT;
             ])
         ]);
         $processor = new Processor($schema);
-        $processor->processPayload($this->introspectionQuery);
+        $response = $processor->processPayload($this->introspectionQuery)->getResponseData();
+
+        $this->assertArrayNotHasKey('errors', $response);
     }
 
     public function testInlineInputFieldCreation(): void
@@ -161,6 +163,7 @@ TEXT;
 
     public function testListAsInputField(): void
     {
+        $this->expectNotToPerformAssertions();
         new InputField([
             'name' => 'test',
             'type' => new ListType(new IntType()),

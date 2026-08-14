@@ -21,6 +21,7 @@ class LoadTest extends TestCase
 
     public function testLoad10k(): bool
     {
+        $this->expectNotToPerformAssertions();
         microtime(true);
         $postType = new ObjectType([
             'name'   => 'Post',
