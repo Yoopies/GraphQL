@@ -120,7 +120,7 @@ class ArrayConnection
         $arraySliceEnd = count($data) - ($sliceEnd - $endOffset) - $arraySliceStart;
 
         $slice = array_slice($data, $arraySliceStart, $arraySliceEnd, true);
-        $edges = array_map(['self', 'edgeForObjectWithIndex'], $slice, array_keys($slice));
+        $edges = array_map([self::class, 'edgeForObjectWithIndex'], $slice, array_keys($slice));
 
         $firstEdge = $edges[0] ?? null;
         $lastEdge = $edges !== [] ? $edges[count($edges) - 1] : null;
