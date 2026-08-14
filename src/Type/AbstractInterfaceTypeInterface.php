@@ -12,7 +12,7 @@ namespace Youshido\GraphQL\Type;
 interface AbstractInterfaceTypeInterface
 {
     /**
-     * @param $object object from resolve function
+     * @param object|array $object object from resolve function
      */
-    public function resolveType(object $object): ?AbstractType;
+    public function resolveType($object);
 }

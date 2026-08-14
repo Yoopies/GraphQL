@@ -29,11 +29,9 @@ class MutationTest extends TestCase
         $this->assertEquals('ship', $mutation->getName());
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testInvalidType(): void
     {
+        $this->expectException(\Exception::class);
         RelayMutation::buildMutation('ship', [
             'name' => new StringType()
         ], new IntType(), static function ($source, $args, $info) : void {

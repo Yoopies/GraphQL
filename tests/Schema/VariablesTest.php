@@ -100,7 +100,7 @@ class VariablesTest extends TestCase
                         'args'    => [
                             'sortOrder' => new StringType(),
                         ],
-                        'resolve' => static function (array $args) : string {
+                        'resolve' => static function ($args) : string {
                             return sprintf('Result with %s order', empty($args['sortOrder']) ? 'default' : $args['sortOrder']);
                         },
                     ],

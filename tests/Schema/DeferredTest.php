@@ -9,6 +9,7 @@
 namespace Youshido\Tests\Schema;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Config\Schema\SchemaConfig;
 use Youshido\GraphQL\Execution\DeferredResolver;
@@ -188,6 +189,7 @@ class DeferredSchema extends AbstractSchema
  */
 class DeferredTest extends TestCase
 {
+    use ProphecyTrait;
 
     /**
      * @var Processor

@@ -32,11 +32,9 @@ class TypeUtilitiesTest extends TestCase
         $this->assertEquals(TypeService::resolveNamedType(123), $stringType);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testNamedTypeResolverException(): void
     {
+        $this->expectException(\Exception::class);
         TypeService::resolveNamedType(['name' => 'test']);
     }
 

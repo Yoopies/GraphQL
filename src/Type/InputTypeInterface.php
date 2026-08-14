@@ -24,7 +24,7 @@ interface InputTypeInterface
     /**
      * @return String type description
      */
-    public function getDescription(): string;
+    public function getDescription(): ?string;
 
     /**
      * Coercing value received as input to current type

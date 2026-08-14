@@ -158,7 +158,7 @@ class TypeValidationRule implements ValidationRuleInterface
         return true;
     }
 
-    private function isInputField(array $data): bool
+    private function isInputField($data): bool
     {
         if (is_object($data)) {
             if ($data instanceof InputFieldInterface) {

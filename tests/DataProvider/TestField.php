@@ -23,7 +23,7 @@ class TestField extends AbstractField
         return new IntType();
     }
 
-    public function resolve($value, array $args, ResolveInfo $info)
+    public function resolve($value, array $args, ResolveInfo $info): mixed
     {
         return $value;
     }

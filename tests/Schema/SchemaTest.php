@@ -109,7 +109,7 @@ class SchemaTest extends TestCase
                     }
                 }');
         $data = $processor->getResponseData();
-        $this->assertArraySubset([11 => ['name' => 'Author']], $data['data']['__schema']['types']);
+        $this->assertEquals('Author', $data['data']['__schema']['types'][11]['name']);
 
         $processor->processPayload('{ user { name { } } }');
         $result = $processor->getResponseData();

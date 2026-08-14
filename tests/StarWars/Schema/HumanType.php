@@ -34,7 +34,7 @@ class HumanType extends AbstractObjectType
             ->addField('homePlanet', TypeMap::TYPE_STRING);
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [new CharacterInterface()];
     }

@@ -171,7 +171,7 @@ class AstTest extends TestCase
 
     public function testVariable(): void
     {
-        $variable = new Variable('id', 'int', false, false, true, new Location(1,1));
+        $variable = new Variable('id', 'int', false, false, new Location(1,1), true);
 
         $this->assertEquals('id', $variable->getName());
         $this->assertEquals('int', $variable->getTypeName());
@@ -194,12 +194,10 @@ class AstTest extends TestCase
         $this->assertEquals(new Literal('text', new Location(1,1)), $variable->getValue());
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testVariableLogicException(): void
     {
-        $variable = new Variable('id', 'int', false, false, true, new Location(1,1));
+        $this->expectException(\LogicException::class);
+        $variable = new Variable('id', 'int', false, false, new Location(1,1), true);
         $variable->getValue();
     }
 }

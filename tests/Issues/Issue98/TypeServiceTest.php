@@ -39,6 +39,12 @@ class DummyObjectWithMagicGet
         return 'getbar';
     }
 
+    // Since symfony/property-access 6.x, __get is only used when __isset confirms the property
+    public function __isset($name)
+    {
+        return true;
+    }
+
 }
 
 class DummyObjectWithMagicCall

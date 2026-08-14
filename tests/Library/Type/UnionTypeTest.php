@@ -56,11 +56,9 @@ class UnionTypeTest extends TestCase
         $this->assertEquals('test', $type->resolveType('test'));
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testInvalidTypesWithScalar(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $type = new UnionType([
             'name'        => 'Car',
             'description' => 'Union collect cars types',
@@ -74,11 +72,9 @@ class UnionTypeTest extends TestCase
         ConfigValidator::getInstance()->assertValidConfig($type->getConfig());
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testInvalidTypes(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $type = new UnionType([
             'name'        => 'Car',
             'description' => 'Union collect cars types',

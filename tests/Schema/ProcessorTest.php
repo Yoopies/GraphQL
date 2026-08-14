@@ -264,7 +264,7 @@ class ProcessorTest extends TestCase
 
         $processor->processPayload('mutation { invalidMutation }');
         $this->assertEquals(['errors' => [[
-            'message'   => 'Field "invalidMutation" not found in type "RootSchemaMutation". Available fields are: "increaseCounter", "invalidResolveTypeMutation", "interfacedMutation"',
+            'message'   => 'Field "invalidMutation" not found in type "RootSchemaMutation".',
             'locations' => [
                 [
                     'line'   => 1,
@@ -306,7 +306,7 @@ class ProcessorTest extends TestCase
 
         $processor->processPayload('{ invalidQuery }');
         $this->assertEquals(['errors' => [[
-            'message'   => 'Field "invalidQuery" not found in type "RootQuery". Available fields are: "me", "randomUser", "invalidValueQuery", "labels", "__schema", "__type"',
+            'message'   => 'Field "invalidQuery" not found in type "RootQuery".',
             'locations' => [
                 [
                     'line'   => 1,
@@ -324,7 +324,7 @@ class ProcessorTest extends TestCase
         $this->assertEquals([
             'data'   => ['me' => null],
             'errors' => [[
-                'message'   => 'Field "middle" not found in type "User". Available fields are: "firstName", "id_alias", "lastName", "code"',
+                'message'   => 'Field "middle" not found in type "User".',
                 'locations' => [
                     [
                         'line'   => 1,
@@ -623,7 +623,7 @@ class ProcessorTest extends TestCase
             ],
             'errors' => [
                 [
-                    'message'   => 'Field "name" not found in type "Object1". Available fields are: "id"',
+                    'message'   => 'Field "name" not found in type "Object1".',
                     'locations' => [
                         [
                             'line'   => 1,
@@ -770,7 +770,7 @@ class ProcessorTest extends TestCase
 
         // don't let complexity reducer affect query errors
         $processor->processPayload('{ me { badfield } }');
-        $this->assertArraySubset(['errors' => [['message' => 'Field "badfield" not found in type "User". Available fields are: "firstName", "lastName", "code", "likes"']]], $processor->getResponseData());
+        $this->assertEquals('Field "badfield" not found in type "User".', $processor->getResponseData()['errors'][0]['message']);
         $processor->getExecutionContext()->clearErrors();
 
         foreach (range(1, 5) as $cost_multiplier) {

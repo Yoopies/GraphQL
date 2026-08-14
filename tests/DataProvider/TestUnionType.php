@@ -8,6 +8,7 @@
 namespace Youshido\Tests\DataProvider;
 
 
+use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\Union\AbstractUnionType;
 
 class TestUnionType extends AbstractUnionType
@@ -20,7 +21,7 @@ class TestUnionType extends AbstractUnionType
         ];
     }
 
-    public function resolveType(object $object)
+    public function resolveType($object)
     {
         return $object;
     }

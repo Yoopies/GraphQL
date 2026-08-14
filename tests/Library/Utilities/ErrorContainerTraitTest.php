@@ -37,8 +37,9 @@ class ErrorContainerTraitTest extends TestCase implements ErrorContainerInterfac
         $this->addError($error);
         $this->assertEquals([$error], $this->getErrors());
 
+        // Duplicated errors are only reported once
         $this->mergeErrors($this);
-        $this->assertEquals([$error, $error], $this->getErrors());
+        $this->assertEquals([$error], $this->getErrors());
     }
 
     public function testGetErrorsAsArrayGenericExceptionWithoutCode(): void

@@ -37,7 +37,7 @@ class NodeTest extends TestCase
      */
     public function testFromGlobalIdThrowsExceptionIfGivenMalformedId($idToCheck): void
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         Node::fromGlobalId($idToCheck);
     }
 }

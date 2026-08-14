@@ -23,19 +23,19 @@ class RequestValidatorTest extends TestCase
 {
 
     /**
-     * @expectedException \Youshido\GraphQL\Exception\Parser\InvalidRequestException
      * @dataProvider invalidRequestProvider
      */
     public function testInvalidRequests(Request $request): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\Parser\InvalidRequestException::class);
         (new RequestValidator())->validate($request);
     }
 
     public function invalidRequestProvider()
     {
-        $variable1 = (new Variable('test', 'Int', false, false, true, new Location(1, 1)))->setUsed(true);
-        $variable2 = (new Variable('test2', 'Int', false, false, true, new Location(1, 1)))->setUsed(true);
-        $variable3 = (new Variable('test3', 'Int', false, false, true, new Location(1, 1)))->setUsed(false);
+        $variable1 = (new Variable('test', 'Int', false, false, new Location(1, 1), true))->setUsed(true);
+        $variable2 = (new Variable('test2', 'Int', false, false, new Location(1, 1), true))->setUsed(true);
+        $variable3 = (new Variable('test3', 'Int', false, false, new Location(1, 1), true))->setUsed(false);
 
         return [
             [
@@ -88,7 +88,7 @@ class RequestValidatorTest extends TestCase
                     'queries'            => [
                         new Query('test', null,
                             [
-                                new Argument('test', new VariableReference('test', null, new Location(1, 1)), new Location(1, 1))
+                                new Argument('test', new VariableReference('test', new Location(1, 1)), new Location(1, 1))
                             ],
                             [
                                 new Field('test', null, [], [], new Location(1, 1))
@@ -98,7 +98,7 @@ class RequestValidatorTest extends TestCase
                         )
                     ],
                     'variableReferences' => [
-                        new VariableReference('test', null, new Location(1, 1))
+                        new VariableReference('test', new Location(1, 1))
                     ]
                 ], ['test' => 1])
             ],
@@ -106,8 +106,8 @@ class RequestValidatorTest extends TestCase
                 new Request([
                     'queries'            => [
                         new Query('test', null, [
-                            new Argument('test', new VariableReference('test', $variable1, new Location(1, 1)), new Location(1, 1)),
-                            new Argument('test2', new VariableReference('test2', $variable2, new Location(1, 1)), new Location(1, 1)),
+                            new Argument('test', new VariableReference('test', new Location(1, 1), $variable1), new Location(1, 1)),
+                            new Argument('test2', new VariableReference('test2', new Location(1, 1), $variable2), new Location(1, 1)),
                         ], [
                             new Field('test', null, [], [], new Location(1, 1))
                         ], [], new Location(1,1))
@@ -118,8 +118,8 @@ class RequestValidatorTest extends TestCase
                         $variable3
                     ],
                     'variableReferences' => [
-                        new VariableReference('test', $variable1, new Location(1, 1)),
-                        new VariableReference('test2', $variable2, new Location(1, 1))
+                        new VariableReference('test', new Location(1, 1), $variable1),
+                        new VariableReference('test2', new Location(1, 1), $variable2)
                     ]
                 ], ['test' => 1, 'test2' => 2])
             ]

@@ -22,27 +22,21 @@ use Youshido\Tests\DataProvider\TestConfigInvalidRule;
 class ConfigTest extends TestCase
 {
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testEmptyParams(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         new TestConfig([]);
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testInvalidParams(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         ConfigValidator::getInstance()->assertValidConfig(new TestConfig(['id' => 1]));
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testInvalidMethod(): void
     {
+        $this->expectException(\Exception::class);
         $config = new TestConfig(['name' => 'test']);
         $config->doSomethingStrange();
     }
@@ -98,29 +92,23 @@ class ConfigTest extends TestCase
         $this->assertEquals('extraValue', $configExtraFields->get('extraField'));
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testFinalRule(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         ConfigValidator::getInstance()->assertValidConfig(new TestConfig(['name' => 'Testfinal'], null, true));
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testInvalidRule(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         ConfigValidator::getInstance()->assertValidConfig(
-            new TestConfigInvalidRule(['name' => 'Test', 'invalidRuleField' => 'test'], null, null)
+            new TestConfigInvalidRule(['name' => 'Test', 'invalidRuleField' => 'test'], null, false)
         );
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testEnumConfig(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $enumType = new EnumType([
             'name'   => 'Status',
             'values' => [

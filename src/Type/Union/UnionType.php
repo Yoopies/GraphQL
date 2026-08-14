@@ -15,7 +15,7 @@ final class UnionType extends AbstractUnionType
 
     protected bool $isFinal = true;
 
-    public function resolveType(object $object): ?AbstractType
+    public function resolveType($object)
     {
         $callable = $this->getConfigValue('resolveType');
 

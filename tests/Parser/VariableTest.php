@@ -14,24 +14,22 @@ class VariableTest extends TestCase
      */
     public function testGetValue($actual, $expected): void
     {
-        $var = new Variable('foo', 'bar', false, false, true, new Location(1,1));
+        $var = new Variable('foo', 'bar', false, false, new Location(1,1), true);
         $var->setValue($actual);
         $this->assertEquals($var->getValue(), $expected);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Value is not set for variable "foo"
-     */
     public function testGetNullValueException(): void
     {
-        $var = new Variable('foo', 'bar', false, false, true, new Location(1,1));
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Value is not set for variable "foo"');
+        $var = new Variable('foo', 'bar', false, false, new Location(1,1), true);
         $var->getValue();
     }
 
     public function testGetValueReturnsDefaultValueIfNoValueSet(): void
     {
-        $var = new Variable('foo', 'bar', false, false, true, new Location(1,1));
+        $var = new Variable('foo', 'bar', false, false, new Location(1,1), true);
         $var->setDefaultValue('default-value');
 
         $this->assertEquals(
@@ -42,7 +40,7 @@ class VariableTest extends TestCase
 
     public function testGetValueReturnsSetValueEvenWithDefaultValue(): void
     {
-        $var = new Variable('foo', 'bar', false, false, true, new Location(1,1));
+        $var = new Variable('foo', 'bar', false, false, new Location(1,1), true);
         $var->setValue('real-value');
         $var->setDefaultValue('default-value');
 
@@ -54,7 +52,7 @@ class VariableTest extends TestCase
 
     public function testIndicatesDefaultValuePresent(): void
     {
-        $var = new Variable('foo', 'bar', false, false, true, new Location(1,1));
+        $var = new Variable('foo', 'bar', false, false, new Location(1,1), true);
         $var->setDefaultValue('default-value');
 
         $this->assertTrue(
@@ -64,7 +62,7 @@ class VariableTest extends TestCase
 
     public function testHasNoDefaultValue(): void
     {
-        $var = new Variable('foo', 'bar', false, false, true, new Location(1,1));
+        $var = new Variable('foo', 'bar', false, false, new Location(1,1), true);
 
         $this->assertFalse(
             $var->hasDefaultValue()

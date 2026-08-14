@@ -70,8 +70,15 @@ class ScalarTypeTest extends TestCase
     {
         $parsed = $object->parseValue($input);
         if ($parsed instanceof \DateTime) {
-            $expected = \DateTime::createFromFormat($typeName === 'datetime' ? 'Y-m-d H:i:s' : 'D, d M Y H:i:s O', $expected);
-            $parsed   = \DateTime::createFromFormat('Y-m-d H:i:s', $parsed->format('Y-m-d H:i:s'));
+            $formats = [
+                'datetime'   => 'Y-m-d H:i:s',
+                'date'       => 'Y-m-d',
+                'datetimetz' => 'D, d M Y H:i:s O',
+            ];
+            $format   = $formats[$typeName] ?? 'Y-m-d H:i:s';
+            // The leading "!" resets fields not present in the format so both sides compare equal
+            $expected = \DateTime::createFromFormat('!' . $format, $expected);
+            $parsed   = \DateTime::createFromFormat('!' . $format, $parsed->format($format));
         }
 
         $this->assertEquals($expected, $parsed, $object->getName() . ' parse for: ' . serialize($input));

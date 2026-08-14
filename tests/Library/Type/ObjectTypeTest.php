@@ -21,30 +21,24 @@ use Youshido\Tests\DataProvider\TestObjectType;
 class ObjectTypeTest extends TestCase
 {
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testCreatingInvalidObject(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         new ObjectType([]);
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testInvalidNameParam(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $type = new ObjectType([
             'name' => null
         ]);
         ConfigValidator::getInstance()->assertValidConfig($type->getConfig());
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testInvalidFieldsParam(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $type = new ObjectType([
             'name'   => 'SomeName',
             'fields' => []
@@ -52,11 +46,9 @@ class ObjectTypeTest extends TestCase
         ConfigValidator::getInstance()->assertValidConfig($type->getConfig());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSerialize(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
         $object = new ObjectType([
             'name'   => 'SomeName',
             'fields' => [

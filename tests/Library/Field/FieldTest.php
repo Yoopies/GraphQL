@@ -87,10 +87,10 @@ class FieldTest extends TestCase
      * @param $fieldConfig
      *
      * @dataProvider invalidFieldProvider
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
     public function testInvalidFieldParams($fieldConfig): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $field = new Field($fieldConfig);
         ConfigValidator::getInstance()->assertValidConfig($field->getConfig());
     }

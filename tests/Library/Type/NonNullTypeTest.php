@@ -17,11 +17,9 @@ use Youshido\GraphQL\Type\TypeService;
 class NonNullTypeTest extends TestCase
 {
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
     public function testInvalidParams(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         new NonNullType('invalid param');
     }
 

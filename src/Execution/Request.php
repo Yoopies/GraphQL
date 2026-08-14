@@ -40,7 +40,7 @@ class Request
     /**
      * @throws InvalidRequestException
      */
-    public function __construct(array $data = [], array $variables = [])
+    public function __construct(array $data = [], array|string $variables = [])
     {
         if (array_key_exists('queries', $data)) {
             $this->addQueries($data['queries']);
