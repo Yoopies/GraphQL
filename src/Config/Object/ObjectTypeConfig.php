@@ -11,6 +11,7 @@ namespace Youshido\GraphQL\Config\Object;
 use Youshido\GraphQL\Config\AbstractConfig;
 use Youshido\GraphQL\Config\Traits\FieldsAwareConfigTrait;
 use Youshido\GraphQL\Config\TypeConfigInterface;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
 use Youshido\GraphQL\Type\TypeService;
 
@@ -25,17 +26,20 @@ class ObjectTypeConfig extends AbstractConfig implements TypeConfigInterface
 
     use FieldsAwareConfigTrait;
 
-    public function getRules()
+    public function getRules(): array
     {
         return [
-            'name'        => ['type' => TypeService::TYPE_STRING, 'required' => true],
+            'name' => ['type' => TypeService::TYPE_STRING, 'required' => true],
             'description' => ['type' => TypeService::TYPE_STRING],
-            'fields'      => ['type' => TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG, 'final' => true],
-            'interfaces'  => ['type' => TypeService::TYPE_ARRAY_OF_INTERFACES]
+            'fields' => ['type' => TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG, 'final' => true],
+            'interfaces' => ['type' => TypeService::TYPE_ARRAY_OF_INTERFACES]
         ];
     }
 
-    protected function build()
+    /**
+     * @throws ConfigurationException
+     */
+    protected function build(): void
     {
         $this->buildFields();
     }
@@ -43,9 +47,8 @@ class ObjectTypeConfig extends AbstractConfig implements TypeConfigInterface
     /**
      * @return AbstractInterfaceType[]
      */
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return $this->get('interfaces', []);
     }
-
 }

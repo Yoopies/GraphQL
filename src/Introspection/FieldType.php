@@ -7,7 +7,10 @@
 
 namespace Youshido\GraphQL\Introspection;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\FieldInterface;
+use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
@@ -16,12 +19,12 @@ use Youshido\GraphQL\Type\TypeMap;
 class FieldType extends AbstractObjectType
 {
 
-    public function resolveType(FieldInterface $value)
+    public function resolveType(FieldInterface $value): AbstractType
     {
         return $value->getType();
     }
 
-    public function resolveArgs(FieldInterface $value)
+    public function resolveArgs(FieldInterface $value): array
     {
         if ($value->hasArguments()) {
             return $value->getArguments();
@@ -30,7 +33,10 @@ class FieldType extends AbstractObjectType
         return [];
     }
 
-    public function build($config)
+    /**
+     * @throws ConfigurationException
+     */
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))
@@ -38,16 +44,16 @@ class FieldType extends AbstractObjectType
             ->addField('isDeprecated', new NonNullType(TypeMap::TYPE_BOOLEAN))
             ->addField('deprecationReason', TypeMap::TYPE_STRING)
             ->addField('type', [
-                'type'    => new NonNullType(new QueryType()),
-                'resolve' => [$this, 'resolveType'],
+                'type' => new NonNullType(new QueryType()),
+                'resolve' => $this->resolveType(...),
             ])
             ->addField('args', [
-                'type'    => new NonNullType(new ListType(new NonNullType(new InputValueType()))),
-                'resolve' => [$this, 'resolveArgs'],
+                'type' => new NonNullType(new ListType(new NonNullType(new InputValueType()))),
+                'resolve' => $this->resolveArgs(...),
             ]);
     }
 
-    public function isValidValue($value)
+    public function isValidValue(mixed $value): bool
     {
         return $value instanceof FieldInterface;
     }
@@ -55,7 +61,7 @@ class FieldType extends AbstractObjectType
     /**
      * @return String type name
      */
-    public function getName()
+    public function getName(): string
     {
         return '__Field';
     }

@@ -9,6 +9,8 @@
 namespace Youshido\GraphQL\Relay;
 
 
+use Youshido\GraphQL\Config\Object\InterfaceTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Relay\Fetcher\FetcherInterface;
 use Youshido\GraphQL\Relay\Field\GlobalIdField;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
@@ -19,23 +21,23 @@ class NodeInterfaceType extends AbstractInterfaceType
     /** @var  FetcherInterface */ //todo: maybe there are better solution
     protected $fetcher;
 
-    public function getName()
+    public function getName(): string
     {
         return 'NodeInterface';
     }
 
-    public function build($config)
+    /**
+     * @throws ConfigurationException
+     */
+    public function build(InterfaceTypeConfig $config): void
     {
         $config->addField(new GlobalIdField('NodeInterface'));
     }
 
     public function resolveType($object)
     {
-        if ($this->fetcher) {
-            return $this->fetcher->resolveType($object);
-        }
+        return $this->fetcher?->resolveType($object);
 
-        return null;
     }
 
     /**
@@ -48,10 +50,8 @@ class NodeInterfaceType extends AbstractInterfaceType
 
     /**
      * @param FetcherInterface $fetcher
-     *
-     * @return NodeInterfaceType
      */
-    public function setFetcher($fetcher)
+    public function setFetcher($fetcher): static
     {
         $this->fetcher = $fetcher;
 

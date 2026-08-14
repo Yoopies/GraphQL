@@ -8,8 +8,9 @@
 namespace Youshido\GraphQL\Introspection;
 
 use Youshido\GraphQL\Config\Directive\DirectiveConfig;
-use Youshido\GraphQL\Directive\Directive;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Directive\DirectiveInterface;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
@@ -17,16 +18,15 @@ use Youshido\GraphQL\Type\TypeMap;
 
 class DirectiveType extends AbstractObjectType
 {
-
     /**
      * @return String type name
      */
-    public function getName()
+    public function getName(): string
     {
         return '__Directive';
     }
 
-    public function resolveArgs(DirectiveInterface $value)
+    public function resolveArgs(DirectiveInterface $value): array
     {
         if ($value->hasArguments()) {
             return $value->getArguments();
@@ -35,33 +35,29 @@ class DirectiveType extends AbstractObjectType
         return [];
     }
 
-    /**
-     * @param DirectiveInterface|Directive $value
-     *
-     * @return mixed
-     */
-    public function resolveLocations(DirectiveInterface $value)
+    public function resolveLocations(DirectiveInterface $value): mixed
     {
         /** @var DirectiveConfig $directiveConfig */
         $directiveConfig = $value->getConfig();
 
-        $locations = $directiveConfig->getLocations();
-
-        return $locations;
+        return $directiveConfig->getLocations();
     }
 
-    public function build($config)
+    /**
+     * @throws ConfigurationException
+     */
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField('name', new NonNullType(TypeMap::TYPE_STRING))
             ->addField('description', TypeMap::TYPE_STRING)
             ->addField('args', [
-                'type'    => new NonNullType(new ListType(new NonNullType(new InputValueType()))),
-                'resolve' => [$this, 'resolveArgs'],
+                'type' => new NonNullType(new ListType(new NonNullType(new InputValueType()))),
+                'resolve' => $this->resolveArgs(...),
             ])
-            ->addField('locations',[
-                'type'  =>  new NonNullType(new ListType(new NonNullType(new DirectiveLocationType()))),
-                'resolve' => [$this, 'resolveLocations'],
+            ->addField('locations', [
+                'type' => new NonNullType(new ListType(new NonNullType(new DirectiveLocationType()))),
+                'resolve' => $this->resolveLocations(...),
             ]);
     }
 }

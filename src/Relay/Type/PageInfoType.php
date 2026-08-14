@@ -9,6 +9,8 @@
 namespace Youshido\GraphQL\Relay\Type;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\NonNullType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\BooleanType;
@@ -16,29 +18,32 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 
 class PageInfoType extends AbstractObjectType
 {
-    public function build($config)
+    /**
+     * @throws ConfigurationException
+     */
+    public function build(ObjectTypeConfig $config): void
     {
         $config->addFields([
-            'hasNextPage'     => [
-                'type'        => new NonNullType(new BooleanType()),
+            'hasNextPage' => [
+                'type' => new NonNullType(new BooleanType()),
                 'description' => 'When paginating forwards, are there more items?'
             ],
             'hasPreviousPage' => [
-                'type'        => new NonNullType(new BooleanType()),
+                'type' => new NonNullType(new BooleanType()),
                 'description' => 'When paginating backwards, are there more items?'
             ],
-            'startCursor'     => [
-                'type'        => new StringType(),
+            'startCursor' => [
+                'type' => new StringType(),
                 'description' => 'When paginating backwards, the cursor to continue.'
             ],
-            'endCursor'       => [
-                'type'        => new StringType(),
+            'endCursor' => [
+                'type' => new StringType(),
                 'description' => 'When paginating forwards, the cursor to continue.'
             ],
         ]);
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return "Information about pagination in a connection.";
     }

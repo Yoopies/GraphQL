@@ -10,21 +10,28 @@ namespace Youshido\GraphQL\Type\ListType;
 
 
 use Youshido\GraphQL\Config\Object\ListTypeConfig;
+use Youshido\GraphQL\Type\Enum\AbstractEnumType;
+use Youshido\GraphQL\Type\InputObject\AbstractInputObjectType;
+use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
+use Youshido\GraphQL\Type\NonNullType;
+use Youshido\GraphQL\Type\Object\AbstractObjectType;
+use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 
 final class ListType extends AbstractListType
 {
 
     public function __construct($itemType)
     {
+        parent::__construct();
         $this->config = new ListTypeConfig(['itemType' => $itemType], $this, true);
     }
 
-    public function getItemType()
+    public function getItemType(): mixed
     {
         return $this->getConfig()->get('itemType');
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return null;
     }

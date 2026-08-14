@@ -13,7 +13,7 @@ use Youshido\GraphQL\Relay\Connection\ArrayConnection;
 
 class ArrayConnectionTest extends TestCase
 {
-    public function testCursors()
+    public function testCursors(): void
     {
         $offset = 3;
         $data   = ['a', 'b', 'c', 'd', 'e'];
@@ -27,7 +27,7 @@ class ArrayConnectionTest extends TestCase
         $this->assertEquals(2, ArrayConnection::cursorToOffsetWithDefault(null, 2));
     }
 
-    public function testConnectionDefinition()
+    public function testConnectionDefinition(): void
     {
         $data  = ['a', 'b', 'c', 'd', 'e'];
         $edges = [];

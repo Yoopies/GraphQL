@@ -14,10 +14,11 @@ final class EnumType extends AbstractEnumType
 
     public function __construct(array $config)
     {
+        parent::__construct($config);
         $this->config = new EnumTypeConfig($config, $this, true);
     }
 
-    public function getValues()
+    public function getValues(): array
     {
         return $this->getConfig()->getValues();
     }

@@ -9,56 +9,62 @@
 namespace Youshido\GraphQL\Type;
 
 
+use Exception;
+
 class SchemaTypesList
 {
 
-    private $typesList = [];
+    private array $typesList = [];
 
     /**
-     * @param array $types
-     * @throws
      * @return $this
+     * @throws
      */
-    public function addTypes($types)
+    public function addTypes(array $types): static
     {
-        if (!is_array($types)) {
-            throw new \Exception('addTypes accept only array of types');
-        }
-        foreach($types as $type) {
+        foreach ($types as $type) {
             $this->addType($type);
         }
+
         return $this;
     }
 
-    public function getTypes()
+    public function getTypes(): array
     {
         return $this->typesList;
     }
 
     /**
-     * @param TypeInterface $type
      * @return $this
+     * @throws Exception
      */
-    public function addType(TypeInterface $type)
+    public function addType(TypeInterface $type): static
     {
         $typeName = $this->getTypeName($type);
-        if ($this->isTypeNameRegistered($typeName)) return $this;
+        if ($this->isTypeNameRegistered($typeName)) {
+            return $this;
+        }
 
         $this->typesList[$typeName] = $type;
         return $this;
     }
 
-    public function isTypeNameRegistered($typeName)
+    public function isTypeNameRegistered($typeName): bool
     {
         return (isset($this->typesList[$typeName]));
     }
 
-    private function getTypeName($type) {
-        if (is_string($type)) return $type;
-        if (is_object($type) && $type instanceof AbstractType) {
+    /**
+     * @throws Exception
+     */
+    private function getTypeName(TypeInterface $type): ?string
+    {
+
+        if ($type instanceof AbstractType) {
             return $type->getName();
         }
-        throw new \Exception('Invalid type passed to Schema');
+
+        throw new Exception('Invalid type passed to Schema');
     }
 
 }

@@ -7,63 +7,46 @@
 
 namespace Youshido\GraphQL\Parser\Ast;
 
-
 use Youshido\GraphQL\Parser\Ast\Interfaces\ValueInterface;
 use Youshido\GraphQL\Parser\Location;
 
-class Argument extends AbstractAst
+class Argument extends AbstractAst implements ValueInterface
 {
-
-    /** @var string */
-    private $name;
-
-    /** @var ValueInterface */
-    private $value;
+    private string $name;
 
     /**
-     * @param string         $name
-     * @param ValueInterface $value
-     * @param Location       $location
+     * TODO - Was ValueInterface - is there any reason for that?
      */
-    public function __construct($name, ValueInterface $value, Location $location)
+    private mixed $value;
+
+    /**
+     * @param string $name
+     */
+    public function __construct($name, $value, Location $location)
     {
         parent::__construct($location);
 
-        $this->name  = $name;
+        $this->name = $name;
         $this->value = $value;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param mixed $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return \Youshido\GraphQL\Parser\Ast\Interfaces\ValueInterface
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value)
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }
-
-
 }

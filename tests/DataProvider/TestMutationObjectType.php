@@ -9,18 +9,19 @@
 namespace Youshido\Tests\DataProvider;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\Object\AbstractMutationObjectType;
 use Youshido\GraphQL\Type\Scalar\IntType;
 use Youshido\GraphQL\Type\Scalar\StringType;
 
 class TestMutationObjectType extends AbstractMutationObjectType
 {
-    public function getOutputType()
+    public function getOutputType(): \Youshido\GraphQL\Type\Scalar\StringType
     {
         return new StringType();
     }
 
-    public function build($config)
+    public function build(ObjectTypeConfig $config): void
     {
         $this->addArgument('increment', new IntType());
     }

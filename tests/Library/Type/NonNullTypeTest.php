@@ -20,12 +20,12 @@ class NonNullTypeTest extends TestCase
     /**
      * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidParams()
+    public function testInvalidParams(): void
     {
         new NonNullType('invalid param');
     }
 
-    public function testNonNullType()
+    public function testNonNullType(): void
     {
         $stringType      = new StringType();
         $nonNullType     = new NonNullType(new StringType());

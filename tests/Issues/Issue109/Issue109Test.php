@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;use Youshido\GraphQL\Execution\Processor;
 class Issue109Test extends TestCase
 {
 
-    public function testInternalVariableArgument()
+    public function testInternalVariableArgument(): void
     {
         $schema    = new Issue109Schema();
         $processor = new Processor($schema);

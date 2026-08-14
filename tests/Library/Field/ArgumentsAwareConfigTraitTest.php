@@ -17,7 +17,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class ArgumentsAwareConfigTraitTest extends TestCase
 {
 
-    public function testArguments()
+    public function testArguments(): void
     {
         $argsData = [
             'id' => new IntType()

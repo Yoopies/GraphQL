@@ -13,17 +13,17 @@ trait AstArgumentsTrait
 {
 
     /** @var Argument[] */
-    protected $arguments;
+    protected array $arguments;
 
-    private $argumentsCache = null;
+    private $argumentsCache;
 
 
-    public function hasArguments()
+    public function hasArguments(): bool
     {
         return (bool)count($this->arguments);
     }
 
-    public function hasArgument($name)
+    public function hasArgument($name): bool
     {
         return array_key_exists($name, $this->arguments);
     }
@@ -31,17 +31,12 @@ trait AstArgumentsTrait
     /**
      * @return Argument[]
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->arguments;
     }
 
-    /**
-     * @param $name
-     *
-     * @return null|Argument
-     */
-    public function getArgument($name)
+    public function getArgument(string $name): ?Argument
     {
         $argument = null;
         if (isset($this->arguments[$name])) {
@@ -55,13 +50,13 @@ trait AstArgumentsTrait
     {
         $argument = $this->getArgument($name);
 
-        return $argument ? $argument->getValue()->getValue() : null;
+        return $argument?->getValue()->getValue();
     }
 
     /**
      * @param $arguments Argument[]
      */
-    public function setArguments(array $arguments)
+    public function setArguments(array $arguments): void
     {
         $this->arguments = [];
         $this->argumentsCache = null;
@@ -71,12 +66,12 @@ trait AstArgumentsTrait
         }
     }
 
-    public function addArgument(Argument $argument)
+    public function addArgument(Argument $argument): void
     {
         $this->arguments[$argument->getName()] = $argument;
     }
 
-    public function getKeyValueArguments()
+    public function getKeyValueArguments(): array
     {
         if ($this->argumentsCache !== null) {
             return $this->argumentsCache;

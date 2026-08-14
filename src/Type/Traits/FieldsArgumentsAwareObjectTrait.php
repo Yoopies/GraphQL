@@ -9,44 +9,51 @@
 namespace Youshido\GraphQL\Type\Traits;
 
 
+use Youshido\GraphQL\Config\AbstractConfig;
+use Youshido\GraphQL\Config\Field\FieldConfig;
+use Youshido\GraphQL\Config\Field\InputFieldConfig;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Field\InputField;
+use Youshido\GraphQL\Parser\Ast\Argument;
+
 trait FieldsArgumentsAwareObjectTrait
 {
     use FieldsAwareObjectTrait;
 
-    protected $hasArgumentCache = null;
+    protected bool $hasArgumentCache = false;
 
-    public function addArguments($argumentsList)
+    public function addArguments($argumentsList): AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig
     {
         return $this->getConfig()->addArguments($argumentsList);
     }
 
-    public function removeArgument($argumentName)
+    public function removeArgument($argumentName): AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig
     {
         return $this->getConfig()->removeArgument($argumentName);
     }
 
-    public function addArgument($argument, $ArgumentInfo = null)
+    public function addArgument($argument, $ArgumentInfo = null): AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig
     {
         return $this->getConfig()->addArgument($argument, $ArgumentInfo);
     }
 
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->getConfig()->getArguments();
     }
 
-    public function getArgument($argumentName)
+    public function getArgument(string $argumentName): InputField
     {
         return $this->getConfig()->getArgument($argumentName);
     }
 
-    public function hasArgument($argumentName)
+    public function hasArgument(string $argumentName): bool
     {
         return $this->getConfig()->hasArgument($argumentName);
     }
 
-    public function hasArguments()
+    public function hasArguments(): bool
     {
-        return $this->hasArgumentCache === null ? ($this->hasArgumentCache = $this->getConfig()->hasArguments()) : $this->hasArgumentCache;
+        return empty($this->hasArgumentCache) ? ($this->hasArgumentCache = $this->getConfig()->hasArguments()) : $this->hasArgumentCache;
     }
 }

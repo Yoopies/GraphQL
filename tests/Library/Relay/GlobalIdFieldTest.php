@@ -16,7 +16,7 @@ use Youshido\GraphQL\Type\Scalar\IdType;
 class GlobalIdFieldTest extends TestCase
 {
 
-    public function testSimpleMethods()
+    public function testSimpleMethods(): void
     {
         $typeName = 'user';
         $field    = new GlobalIdField($typeName);

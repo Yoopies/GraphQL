@@ -10,6 +10,7 @@ namespace Youshido\GraphQL\Type\InterfaceType;
 
 
 use Youshido\GraphQL\Config\Object\InterfaceTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\Traits\AutoNameTrait;
 use Youshido\GraphQL\Type\Traits\FieldsAwareObjectTrait;
@@ -18,11 +19,12 @@ use Youshido\GraphQL\Type\TypeMap;
 
 abstract class AbstractInterfaceType extends AbstractType
 {
-    use FieldsAwareObjectTrait, AutoNameTrait;
+    use FieldsAwareObjectTrait;
+    use AutoNameTrait;
 
-    protected $isBuilt = false;
+    protected bool $isBuilt = false;
 
-    public function getConfig()
+    public function getConfig(): InterfaceTypeConfig
     {
         if (!$this->isBuilt) {
             $this->isBuilt = true;
@@ -35,11 +37,11 @@ abstract class AbstractInterfaceType extends AbstractType
     /**
      * ObjectType constructor.
      *
-     * @param $config
+     * @throws ConfigurationException
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        if (empty($config)) {
+        if ($config === []) {
             $config['name'] = $this->getName();
         }
 
@@ -48,31 +50,28 @@ abstract class AbstractInterfaceType extends AbstractType
 
     abstract public function resolveType($object);
 
-    /**
-     * @param InterfaceTypeConfig $config
-     */
-    abstract public function build($config);
+    abstract public function build(InterfaceTypeConfig $config);
 
-    public function getKind()
+    public function getKind(): string
     {
         return TypeMap::KIND_INTERFACE;
     }
 
-    public function getNamedType()
+    public function getNamedType(): AbstractInterfaceType|static
     {
         return $this;
     }
 
-    public function isValidValue($value)
+    public function isValidValue(mixed $value): bool
     {
         return is_array($value) || is_null($value) || is_object($value);
     }
 
     /**
-     * @return TypeInterface[] an array of types that implement this interface. Used mainly for introspection and 
+     * @return TypeInterface[] an array of types that implement this interface. Used mainly for introspection and
      *                         documentation generation.
      */
-    public function getImplementations()
+    public function getImplementations(): array
     {
         return [];
     }

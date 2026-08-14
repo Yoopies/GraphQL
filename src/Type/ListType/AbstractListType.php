@@ -7,35 +7,32 @@
 
 namespace Youshido\GraphQL\Type\ListType;
 
-
+use Exception;
+use Traversable;
 use Youshido\GraphQL\Config\Object\ListTypeConfig;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
+use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\CompositeTypeInterface;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\TypeMap;
 
 abstract class AbstractListType extends AbstractObjectType implements CompositeTypeInterface
 {
-    /**
-     * @var ListTypeConfig
-     */
     protected $config;
 
+    /**
+     * @throws ConfigurationException
+     */
     public function __construct()
     {
+        parent::__construct();
         $this->config = new ListTypeConfig(['itemType' => $this->getItemType()], $this);
     }
 
-    /**
-     * @return AbstractObjectType
-     */
-    abstract public function getItemType();
+    abstract public function getItemType(): mixed;
 
-    /**
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    public function isValidValue($value)
+    public function isValidValue(mixed $value): bool
     {
         if (!$this->isIterable($value)) {
             return false;
@@ -46,13 +43,15 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
 
     /**
      * @param $value
-     * @param bool $returnValue
-     *
-     * @return bool
+     * @return mixed - true/false or type of the returned value if $returnValue is true
      */
-    protected function validList($value, $returnValue = false)
+    protected function validList($value, bool $returnValue = false): mixed
     {
         $itemType = $this->config->get('itemType');
+
+        if (empty($itemType)) {
+            return false;
+        }
 
         if ($value && $itemType->isInputType()) {
             foreach ($value as $item) {
@@ -68,54 +67,60 @@ abstract class AbstractListType extends AbstractObjectType implements CompositeT
     /**
      * @inheritdoc
      */
-    public function build($config)
+    public function build(ObjectTypeConfig $config): void
     {
     }
 
-    public function isCompositeType()
+    public function isCompositeType(): bool
     {
         return true;
     }
 
-    public function getNamedType()
+    public function getNamedType(): mixed
     {
         return $this->getItemType();
     }
 
-    final public function getKind()
+    final public function getKind(): string
     {
         return TypeMap::KIND_LIST;
     }
 
-    public function getTypeOf()
+    public function getTypeOf(): AbstractType
     {
         return $this->getNamedType();
     }
 
-    public function parseValue($value)
+    /**
+     * @throws Exception
+     */
+    public function parseValue($value): mixed
     {
-        foreach ((array) $value as $keyValue => $valueItem) {
+        foreach ((array)$value as $keyValue => $valueItem) {
             $value[$keyValue] = $this->getItemType()->parseValue($valueItem);
         }
 
         return $value;
     }
 
-    public function getValidationError($value = null)
+    public function getValidationError($value = null): ?string
     {
         if (!$this->isIterable($value)) {
             return 'The value is not an iterable.';
         }
+
+        if (empty($this->config->get('itemType'))) {
+            return 'itemType is empty.';
+        }
+
         return $this->config->get('itemType')->getValidationError($this->validList($value, true));
     }
 
     /**
      * @param $value
-     *
-     * @return bool
      */
-    protected function isIterable($value)
+    protected function isIterable($value): bool
     {
-        return null === $value || is_array($value) || ($value instanceof \Traversable);
+        return null === $value || is_array($value) || ($value instanceof Traversable);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Youshido\Tests\Issues\Issue171;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Config\Schema\SchemaConfig;
 use Youshido\GraphQL\Schema\AbstractSchema;
 use Youshido\GraphQL\Type\Enum\AbstractEnumType;
@@ -8,7 +9,7 @@ use Youshido\GraphQL\Type\Object\AbstractObjectType;
 
 class Issue171Schema extends AbstractSchema
 {
-    public function build(SchemaConfig $config)
+    public function build(SchemaConfig $config): void
     {
         $config->getQuery()->addField(
             'plan',
@@ -21,7 +22,7 @@ class Issue171Schema extends AbstractSchema
 
 class PlanType extends AbstractObjectType
 {
-    public function build($config)
+    public function build(ObjectTypeConfig $config): void
     {
         $config->addField('kpi_status', [
             'type' => new KpiStatusType(),
@@ -31,7 +32,7 @@ class PlanType extends AbstractObjectType
 
 class KpiStatusType extends AbstractEnumType
 {
-    public function getValues()
+    public function getValues(): array
     {
         return [
             [

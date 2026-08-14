@@ -8,33 +8,37 @@
 
 namespace Youshido\GraphQL\Type;
 
-
 use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 
 class TypeFactory
 {
-    private static $objectsHash = [];
+    private static array $objectsHash = [];
 
     /**
-     * @param string $type
      *
      * @throws ConfigurationException
-     * @return AbstractScalarType
      */
-    public static function getScalarType($type)
+    public static function getScalarType(string $type): ?AbstractScalarType
     {
         if (TypeService::isScalarType($type)) {
-            if (is_object($type)) {
-                return $type;
-            }
             if (empty(self::$objectsHash[$type])) {
                 $name = ucfirst($type);
 
-                $name = $name == 'Datetime' ? 'DateTime' : $name;
-                $name = $name == 'Datetimetz' ? 'DateTimeTz' : $name;
+                $name = $name === 'Datetime' ? 'DateTime' : $name;
+                $name = $name === 'Datetimetz' ? 'DateTimeTz' : $name;
 
-                $className                = 'Youshido\GraphQL\Type\Scalar\\' . $name . 'Type';
+                $className = 'Youshido\GraphQL\Type\Scalar\\' . $name . 'Type';
+
+                // Hotfix for our custom app - TODO - add via configuration
+                if (in_array($name, ['DateTimeAsString', 'StringOrArray', 'Boolean', 'Float', 'Int'])) {
+                    $className = 'App\GraphQL\Schema\Type\Scalar\\' . $name . 'Type';
+                    // Fallback to base scalar types if custom doesn't exist
+                    if (!class_exists($className)) {
+                        $className = 'Youshido\GraphQL\Type\Scalar\\' . $name . 'Type';
+                    }
+                }
+
                 self::$objectsHash[$type] = new $className();
             }
 
@@ -47,7 +51,7 @@ class TypeFactory
     /**
      * @return string[]
      */
-    public static function getScalarTypesNames()
+    public static function getScalarTypesNames(): array
     {
         return [
             TypeMap::TYPE_INT,
@@ -59,6 +63,8 @@ class TypeFactory
             TypeMap::TYPE_DATE,
             TypeMap::TYPE_TIMESTAMP,
             TypeMap::TYPE_DATETIMETZ,
+            TypeMap::TYPE_DATETIME_AS_STRING,
+            TypeMap::TYPE_STRING_OR_ARRAY
         ];
     }
 }

@@ -8,6 +8,7 @@
 namespace Youshido\GraphQL\Introspection\Traits;
 
 use Youshido\GraphQL\Type\AbstractType;
+use Youshido\GraphQL\Type\InputObject\AbstractInputObjectType;
 use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\TypeMap;
@@ -15,12 +16,13 @@ use Youshido\GraphQL\Type\Union\AbstractUnionType;
 
 trait TypeCollectorTrait
 {
+    protected array $types = [];
 
-    protected $types = [];
-
-    protected function collectTypes(AbstractType $type)
+    protected function collectTypes(?AbstractType $type): void
     {
-        if (is_object($type) && array_key_exists($type->getName(), $this->types)) return;
+        if (!$type instanceof AbstractType || array_key_exists($type->getName(), $this->types)) {
+            return;
+        }
 
         switch ($type->getKind()) {
             case TypeMap::KIND_INTERFACE:
@@ -29,7 +31,7 @@ trait TypeCollectorTrait
             case TypeMap::KIND_SCALAR:
                 $this->insertType($type->getName(), $type);
 
-                if ($type->getKind() == TypeMap::KIND_UNION) {
+                if ($type->getKind() === TypeMap::KIND_UNION) {
                     /** @var AbstractUnionType $type */
                     foreach ($type->getTypes() as $subType) {
                         $this->collectTypes($subType);
@@ -51,8 +53,6 @@ trait TypeCollectorTrait
                 break;
 
             case TypeMap::KIND_LIST:
-                $this->collectTypes($type->getNamedType());
-                break;
 
             case TypeMap::KIND_NON_NULL:
                 $this->collectTypes($type->getNamedType());
@@ -61,7 +61,7 @@ trait TypeCollectorTrait
         }
     }
 
-    private function checkAndInsertInterfaces($type)
+    private function checkAndInsertInterfaces($type): void
     {
         foreach ((array)$type->getConfig()->getInterfaces() as $interface) {
             $this->insertType($interface->getName(), $interface);
@@ -74,10 +74,7 @@ trait TypeCollectorTrait
         }
     }
 
-    /**
-     * @param $type AbstractObjectType
-     */
-    private function collectFieldsArgsTypes($type)
+    private function collectFieldsArgsTypes(AbstractObjectType|AbstractInputObjectType $type): void
     {
         foreach ($type->getConfig()->getFields() as $field) {
             $arguments = $field->getConfig()->getArguments();
@@ -92,7 +89,7 @@ trait TypeCollectorTrait
         }
     }
 
-    private function insertType($name, $type)
+    private function insertType($name, $type): bool
     {
         if (!array_key_exists($name, $this->types)) {
             $this->types[$name] = $type;
@@ -102,5 +99,4 @@ trait TypeCollectorTrait
 
         return false;
     }
-
 }

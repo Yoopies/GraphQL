@@ -9,23 +9,17 @@ namespace Youshido\GraphQL\Type;
 
 use Youshido\GraphQL\Directive\DirectiveInterface;
 
-
 class SchemaDirectivesList
 {
-
-    private $directivesList = [];
+    private array $directivesList = [];
 
     /**
-     * @param array $directives
      *
-     * @throws
      * @return $this
+     * @throws
      */
-    public function addDirectives($directives)
+    public function addDirectives(array $directives): static
     {
-        if (!is_array($directives)) {
-            throw new \Exception('addDirectives accept only array of directives');
-        }
         foreach ($directives as $directive) {
             $this->addDirective($directive);
         }
@@ -34,35 +28,31 @@ class SchemaDirectivesList
     }
 
     /**
-     * @param DirectiveInterface $directive
-     *
      * @return $this
      */
-    public function addDirective(DirectiveInterface $directive)
+    public function addDirective(DirectiveInterface $directive): static
     {
         $directiveName = $this->getDirectiveName($directive);
-        if ($this->isDirectiveNameRegistered($directiveName)) return $this;
+        if ($this->isDirectiveNameRegistered($directiveName)) {
+            return $this;
+        }
 
         $this->directivesList[$directiveName] = $directive;
 
         return $this;
     }
 
-    private function getDirectiveName($directive)
+    private function getDirectiveName(DirectiveInterface $directive): string
     {
-        if (is_string($directive)) return $directive;
-        if (is_object($directive) && $directive instanceof DirectiveInterface) {
-            return $directive->getName();
-        }
-        throw new \Exception('Invalid directive passed to Schema');
+        return $directive->getName();
     }
 
-    public function isDirectiveNameRegistered($directiveName)
+    public function isDirectiveNameRegistered($directiveName): bool
     {
         return (isset($this->directivesList[$directiveName]));
     }
 
-    public function getDirectives()
+    public function getDirectives(): array
     {
         return $this->directivesList;
     }

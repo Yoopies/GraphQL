@@ -20,40 +20,31 @@ class Fragment extends AbstractAst
     protected $model;
 
     /** @var Field[]|Query[] */
-    protected $fields;
+    protected array $fields;
 
-    /** @var bool */
-    private $used = false;
+    private bool $used = false;
 
     /**
-     * @param string          $name
-     * @param string          $model
-     * @param array           $directives
+     * @param string $name
+     * @param string $model
      * @param Field[]|Query[] $fields
-     * @param Location        $location
      */
     public function __construct($name, $model, array $directives, array $fields, Location $location)
     {
         parent::__construct($location);
 
-        $this->name   = $name;
-        $this->model  = $model;
+        $this->name = $name;
+        $this->model = $model;
         $this->fields = $fields;
         $this->setDirectives($directives);
     }
 
-    /**
-     * @return boolean
-     */
-    public function isUsed()
+    public function isUsed(): bool
     {
         return $this->used;
     }
 
-    /**
-     * @param boolean $used
-     */
-    public function setUsed($used)
+    public function setUsed(bool $used): void
     {
         $this->used = $used;
     }
@@ -69,7 +60,7 @@ class Fragment extends AbstractAst
     /**
      * @param mixed $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -85,7 +76,7 @@ class Fragment extends AbstractAst
     /**
      * @param mixed $model
      */
-    public function setModel($model)
+    public function setModel($model): void
     {
         $this->model = $model;
     }
@@ -93,7 +84,7 @@ class Fragment extends AbstractAst
     /**
      * @return Field[]|Query[]
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
@@ -101,7 +92,7 @@ class Fragment extends AbstractAst
     /**
      * @param Field[]|Query[] $fields
      */
-    public function setFields($fields)
+    public function setFields(array $fields): void
     {
         $this->fields = $fields;
     }

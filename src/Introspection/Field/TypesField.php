@@ -8,6 +8,7 @@
 namespace Youshido\GraphQL\Introspection\Field;
 
 
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Execution\ResolveInfo;
 use Youshido\GraphQL\Field\AbstractField;
 use Youshido\GraphQL\Introspection\QueryType;
@@ -23,18 +24,19 @@ class TypesField extends AbstractField
 
     /**
      * @return AbstractObjectType
+     * @throws ConfigurationException
      */
-    public function getType()
+    public function getType(): ListType
     {
         return new ListType(new QueryType());
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'types';
     }
 
-    public function resolve($value, array $args, ResolveInfo $info)
+    public function resolve($value, array $args, ResolveInfo $info): array
     {
         /** @var $value AbstractSchema $a */
         $this->types = [];
@@ -45,7 +47,7 @@ class TypesField extends AbstractField
         }
 
         foreach ($value->getTypesList()->getTypes() as $type) {
-          $this->collectTypes($type);
+            $this->collectTypes($type);
         }
 
         return array_values($this->types);

@@ -8,7 +8,7 @@
 
 namespace Youshido\GraphQL\Execution\Context;
 
-
+use Exception;
 use Youshido\GraphQL\Execution\Container\ContainerInterface;
 use Youshido\GraphQL\Execution\Request;
 use Youshido\GraphQL\Field\Field;
@@ -21,25 +21,18 @@ use Youshido\GraphQL\Validator\SchemaValidator\SchemaValidator;
 
 class ExecutionContext implements ExecutionContextInterface
 {
-
     use ErrorContainerTrait;
 
-    /** @var AbstractSchema */
-    private $schema;
+    private AbstractSchema $schema;
 
-    /** @var Request */
-    private $request;
+    private ?Request $request = null;
 
-    /** @var ContainerInterface */
-    private $container;
+    private ?ContainerInterface $container = null;
 
-    /** @var array */
-    private $typeFieldLookupTable;
+    private array $typeFieldLookupTable = [];
 
     /**
      * ExecutionContext constructor.
-     *
-     * @param AbstractSchema $schema
      */
     public function __construct(AbstractSchema $schema)
     {
@@ -47,17 +40,12 @@ class ExecutionContext implements ExecutionContextInterface
         $this->validateSchema();
 
         $this->introduceIntrospectionFields();
-
-        $this->typeFieldLookupTable = [];
     }
 
     /**
-     * @param AbstractObjectType $type
-     * @param string             $fieldName
-     * 
-     * @return Field
+     * @return mixed - Field
      */
-    public function getField(AbstractObjectType $type, $fieldName)
+    public function getField(AbstractObjectType $type, string $fieldName): mixed
     {
         $typeName = $type->getName();
 
@@ -72,56 +60,46 @@ class ExecutionContext implements ExecutionContextInterface
         return $this->typeFieldLookupTable[$typeName][$fieldName];
     }
 
-    protected function validateSchema()
+    protected function validateSchema(): void
     {
         try {
             (new SchemaValidator())->validate($this->schema);
-        } catch (\Exception $e) {
-            $this->addError($e);
-        };
+        } catch (Exception $exception) {
+            $this->addError($exception);
+        }
     }
 
-    protected function introduceIntrospectionFields()
+    protected function introduceIntrospectionFields(): void
     {
         $schemaField = new SchemaField();
         $this->schema->addQueryField($schemaField);
         $this->schema->addQueryField(new TypeDefinitionField());
     }
 
-    /**
-     * @return AbstractSchema
-     */
-    public function getSchema()
+    public function getSchema(): AbstractSchema
     {
         return $this->schema;
     }
 
     /**
-     * @param AbstractSchema $schema
-     *
      * @return $this
      */
-    public function setSchema(AbstractSchema $schema)
+    public function setSchema(AbstractSchema $schema): static
     {
         $this->schema = $schema;
 
         return $this;
     }
 
-    /**
-     * @return Request
-     */
-    public function getRequest()
+    public function getRequest(): ?Request
     {
         return $this->request;
     }
 
     /**
-     * @param Request $request
-     *
      * @return $this
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): static
     {
         $this->request = $request;
 
@@ -133,20 +111,15 @@ class ExecutionContext implements ExecutionContextInterface
         return $this->container->get($id);
     }
 
-    /**
-     * @return ContainerInterface
-     */
-    public function getContainer()
+    public function getContainer(): ?ContainerInterface
     {
         return $this->container;
     }
 
     /**
-     * @param ContainerInterface $container
-     *
      * @return $this
      */
-    public function setContainer(ContainerInterface $container)
+    public function setContainer(ContainerInterface $container): static
     {
         $this->container = $container;
 

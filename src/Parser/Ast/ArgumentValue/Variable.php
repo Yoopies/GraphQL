@@ -7,6 +7,7 @@
 
 namespace Youshido\GraphQL\Parser\Ast\ArgumentValue;
 
+use LogicException;
 use Youshido\GraphQL\Parser\Ast\AbstractAst;
 use Youshido\GraphQL\Parser\Ast\Interfaces\ValueInterface;
 use Youshido\GraphQL\Parser\Location;
@@ -23,47 +24,41 @@ class Variable extends AbstractAst implements ValueInterface
     /** @var string */
     private $type;
 
-    /** @var bool */
-    private $nullable = false;
+    private bool $nullable = false;
 
-    /** @var bool */
-    private $isArray = false;
+    private bool $isArray = false;
 
-    /** @var bool */
-    private $used = false;
+    private bool $used = false;
 
-    /** @var bool */
-    private $arrayElementNullable = true;
+    private bool $arrayElementNullable = true;
 
-    /** @var bool */
-    private $hasDefaultValue = false;
+    private bool $hasDefaultValue = false;
 
     /** @var mixed */
-    private $defaultValue = null;
+    private $defaultValue;
 
     /**
-     * @param string   $name
-     * @param string   $type
-     * @param bool     $nullable
-     * @param bool     $isArray
-     * @param bool     $arrayElementNullable
-     * @param Location $location
+     * @param string $name
+     * @param string $type
+     * @param bool $nullable
+     * @param bool $isArray
+     * @param bool $arrayElementNullable
      */
-    public function __construct($name, $type, $nullable, $isArray, $arrayElementNullable = true, Location $location)
+    public function __construct($name, $type, $nullable, $isArray, Location $location, $arrayElementNullable = true)
     {
         parent::__construct($location);
 
-        $this->name                 = $name;
-        $this->type                 = $type;
-        $this->isArray              = $isArray;
-        $this->nullable             = $nullable;
+        $this->name = $name;
+        $this->type = $type;
+        $this->isArray = $isArray;
+        $this->nullable = $nullable;
         $this->arrayElementNullable = $arrayElementNullable;
     }
 
     /**
      * @return mixed
      *
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function getValue()
     {
@@ -71,7 +66,8 @@ class Variable extends AbstractAst implements ValueInterface
             if ($this->hasDefaultValue()) {
                 return $this->defaultValue;
             }
-            throw new \LogicException('Value is not set for variable "' . $this->name . '"');
+
+            throw new LogicException('Value is not set for variable "' . $this->name . '"');
         }
 
         return $this->value;
@@ -80,7 +76,7 @@ class Variable extends AbstractAst implements ValueInterface
     /**
      * @param mixed $value
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }
@@ -96,7 +92,7 @@ class Variable extends AbstractAst implements ValueInterface
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
@@ -112,47 +108,32 @@ class Variable extends AbstractAst implements ValueInterface
     /**
      * @param string $type
      */
-    public function setTypeName($type)
+    public function setTypeName($type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isArray()
+    public function isArray(): bool
     {
         return $this->isArray;
     }
 
-    /**
-     * @param boolean $isArray
-     */
-    public function setIsArray($isArray)
+    public function setIsArray(bool $isArray): void
     {
         $this->isArray = $isArray;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isNullable()
+    public function isNullable(): bool
     {
         return $this->nullable;
     }
 
-    /**
-     * @param boolean $nullable
-     */
-    public function setNullable($nullable)
+    public function setNullable(bool $nullable): void
     {
         $this->nullable = $nullable;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasDefaultValue()
+    public function hasDefaultValue(): bool
     {
         return $this->hasDefaultValue;
     }
@@ -168,45 +149,34 @@ class Variable extends AbstractAst implements ValueInterface
     /**
      * @param mixed $defaultValue
      */
-    public function setDefaultValue($defaultValue)
+    public function setDefaultValue($defaultValue): void
     {
         $this->hasDefaultValue = true;
 
         $this->defaultValue = $defaultValue;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isUsed()
+    public function isUsed(): bool
     {
         return $this->used;
     }
 
     /**
-     * @param boolean $used
-     *
      * @return $this
      */
-    public function setUsed($used)
+    public function setUsed(bool $used): static
     {
         $this->used = $used;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isArrayElementNullable()
+    public function isArrayElementNullable(): bool
     {
         return $this->arrayElementNullable;
     }
 
-    /**
-     * @param bool $arrayElementNullable
-     */
-    public function setArrayElementNullable($arrayElementNullable)
+    public function setArrayElementNullable(bool $arrayElementNullable): void
     {
         $this->arrayElementNullable = $arrayElementNullable;
     }

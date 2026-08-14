@@ -8,6 +8,7 @@
 namespace Youshido\Tests\StarWars\Schema;
 
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Type\TypeMap;
 
 class DroidType extends HumanType
@@ -16,16 +17,16 @@ class DroidType extends HumanType
     /**
      * @return String type name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Droid';
     }
 
-    public function build($config)
+    public function build(ObjectTypeConfig $config): void
     {
         parent::build($config);
 
-        $config->getField('friends')->getConfig()->set('resolve', function ($droid) {
+        $config->getField('friends')->getConfig()->set('resolve', static function ($droid) {
             return StarWarsData::getFriends($droid);
         });
 
@@ -33,7 +34,7 @@ class DroidType extends HumanType
             ->addField('primaryFunction', TypeMap::TYPE_STRING);
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return [new CharacterInterface()];
     }
