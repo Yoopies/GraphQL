@@ -10,6 +10,7 @@ namespace Youshido\GraphQL\Type\Enum;
 
 use Youshido\GraphQL\Config\Object\EnumTypeConfig;
 use Youshido\GraphQL\Config\Traits\ConfigAwareTrait;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\Traits\AutoNameTrait;
 use Youshido\GraphQL\Type\TypeMap;
@@ -17,16 +18,17 @@ use Youshido\GraphQL\Type\TypeMap;
 abstract class AbstractEnumType extends AbstractType
 {
 
-    use AutoNameTrait, ConfigAwareTrait;
+    use AutoNameTrait;
+    use ConfigAwareTrait;
 
     /**
      * ObjectType constructor.
-     * @param $config
+     * @throws ConfigurationException
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
-        if (empty($config)) {
-            $config['name']   = $this->getName();
+        if ($config === []) {
+            $config['name'] = $this->getName();
             $config['values'] = $this->getValues();
         }
 
@@ -36,19 +38,20 @@ abstract class AbstractEnumType extends AbstractType
     /**
      * @return String predefined type kind
      */
-    public function getKind()
+    public function getKind(): string
     {
         return TypeMap::KIND_ENUM;
     }
 
     /**
      * @param $value mixed
-     *
-     * @return bool
      */
-    public function isValidValue($value)
+    public function isValidValue(mixed $value): bool
     {
-        if (is_null($value)) return true;
+        if (is_null($value)) {
+            return true;
+        }
+
         foreach ($this->getConfig()->get('values') as $item) {
             if ($value === $item['name'] || $value === $item['value']) {
                 return true;
@@ -58,20 +61,17 @@ abstract class AbstractEnumType extends AbstractType
         return false;
     }
 
-    public function getValidationError($value = null)
+    public function getValidationError($value = null): ?string
     {
-        $allowedValues             = array_map(function (array $value) {
+        $allowedValues = array_map(static function (array $value): string {
             return sprintf('%s (%s)', $value['name'], $value['value']);
         }, $this->getConfig()->get('values'));
         return sprintf('Value must be one of the allowed ones: %s', implode(', ', $allowedValues));
     }
 
-    /**
-     * @return array
-     */
-    abstract public function getValues();
+    abstract public function getValues(): array;
 
-    public function serialize($value)
+    public function serialize($value): mixed
     {
         foreach ($this->getConfig()->get('values') as $valueItem) {
             if ($value === $valueItem['value']) {
@@ -82,7 +82,7 @@ abstract class AbstractEnumType extends AbstractType
         return null;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): mixed
     {
         foreach ($this->getConfig()->get('values') as $valueItem) {
             if ($value === $valueItem['name']) {

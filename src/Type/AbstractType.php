@@ -8,54 +8,42 @@
 
 namespace Youshido\GraphQL\Type;
 
-
-use Youshido\GraphQL\Type\Object\AbstractObjectType;
-
 abstract class AbstractType implements TypeInterface
 {
 
-    protected $lastValidationError = null;
+    protected $lastValidationError;
 
-    public function isCompositeType()
+    public function isCompositeType(): bool
     {
         return false;
     }
 
-    /**
-     * @return AbstractType
-     */
-    public function getType()
+    public function getType(): mixed
     {
         return $this;
     }
 
-    /**
-     * @return AbstractType
-     */
-    public function getNamedType()
+    public function getNamedType(): mixed
     {
         return $this->getType();
     }
 
-    /**
-     * @return AbstractType|AbstractObjectType
-     */
-    public function getNullableType()
+    public function getNullableType(): mixed
     {
         return $this;
     }
 
-    public function getValidationError($value = null)
+    public function getValidationError($value = null): ?string
     {
         return $this->lastValidationError;
     }
 
-    public function isValidValue($value)
+    public function isValidValue(mixed $value): bool
     {
         return true;
     }
 
-    public function parseValue($value)
+    public function parseValue($value): mixed
     {
         return $value;
     }
@@ -65,18 +53,18 @@ abstract class AbstractType implements TypeInterface
         return $this->parseValue($value);
     }
 
-    public function serialize($value)
+    public function serialize($value): mixed
     {
         return $value;
     }
 
-    public function isInputType()
+    public function isInputType(): bool
     {
         return false;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->getName();
+        return $this->getName() ?? '';
     }
 }

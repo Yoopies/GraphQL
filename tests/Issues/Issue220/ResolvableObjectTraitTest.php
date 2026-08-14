@@ -3,6 +3,7 @@
 namespace Youshido\Tests\Issues\Issue220;
 
 use PHPUnit\Framework\TestCase;
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\StringType;
@@ -11,7 +12,7 @@ use Youshido\Tests\DataProvider\TestResolveInfo;
 class Issue220Test extends TestCase
 {
 
-    public function testValueNotFoundInResolveScalarType()
+    public function testValueNotFoundInResolveScalarType(): void
     {
         $fieldWithResolve = new Field([
             'name' => 'scalarField',
@@ -23,7 +24,7 @@ class Issue220Test extends TestCase
         $this->assertEquals(null, $fieldWithResolve->resolve([], [], $resolveInfo));
     }
 
-    public function testValueNotFoundInResolveObjectType()
+    public function testValueNotFoundInResolveObjectType(): void
     {
         $fieldWithResolve = new Field([
             'name' => 'scalarField',
@@ -35,7 +36,7 @@ class Issue220Test extends TestCase
         $this->assertEquals(null, $fieldWithResolve->resolve([], [], $resolveInfo));
     }
 
-    public function testValueFoundInResolve()
+    public function testValueFoundInResolve(): void
     {
         $fieldWithResolve = new Field([
             'name' => 'scalarField',
@@ -50,7 +51,7 @@ class Issue220Test extends TestCase
 
 class ArticleType extends AbstractObjectType
 {
-    public function build($config)
+    public function build(ObjectTypeConfig $config): void
     {
         $config->addFields([
             'title' => new StringType(),

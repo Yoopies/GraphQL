@@ -20,21 +20,17 @@ use Youshido\Tests\DataProvider\TestInterfaceType;
 
 class SchemaValidatorTest extends TestCase
 {
-    /**
-     * @expectedException \Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testInvalidSchema()
+    public function testInvalidSchema(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $validator = new SchemaValidator();
         $validator->validate(new TestEmptySchema());
     }
 
-    /**
-     * @expectedException \Youshido\GraphQL\Exception\ConfigurationException
-     * @expectedExceptionMessage Implementation of TestInterface is invalid for the field name
-     */
-    public function testInvalidInterfacesSimpleType()
+    public function testInvalidInterfacesSimpleType(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
+        $this->expectExceptionMessage('Implementation of TestInterface is invalid for the field name');
         $schema = new Schema([
             'query' => new ObjectType([
                 'name'   => 'RootQuery',
@@ -54,12 +50,10 @@ class SchemaValidatorTest extends TestCase
         $validator->validate($schema);
     }
 
-    /**
-     * @expectedException \Youshido\GraphQL\Exception\ConfigurationException
-     * @expectedExceptionMessage Implementation of TestInterface is invalid for the field name
-     */
-    public function testInvalidInterfacesCompositeType()
+    public function testInvalidInterfacesCompositeType(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
+        $this->expectExceptionMessage('Implementation of TestInterface is invalid for the field name');
         $schema = new Schema([
             'query' => new ObjectType([
                 'name'   => 'RootQuery',
@@ -79,12 +73,10 @@ class SchemaValidatorTest extends TestCase
         $validator->validate($schema);
     }
 
-    /**
-     * @expectedException \Youshido\GraphQL\Exception\ConfigurationException
-     * @expectedExceptionMessage Implementation of TestInterface is invalid for the field name
-     */
-    public function testInvalidInterfaces()
+    public function testInvalidInterfaces(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
+        $this->expectExceptionMessage('Implementation of TestInterface is invalid for the field name');
         $schema = new Schema([
             'query' => new ObjectType([
                 'name'   => 'RootQuery',
@@ -104,7 +96,7 @@ class SchemaValidatorTest extends TestCase
         $validator->validate($schema);
     }
 
-    public function testValidSchema()
+    public function testValidSchema(): void
     {
         $schema = new Schema([
             'query' => new ObjectType([
@@ -126,7 +118,7 @@ class SchemaValidatorTest extends TestCase
         try {
             $validator->validate($schema);
             $this->assertTrue(true);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             $this->assertTrue(false);
         }
     }

@@ -2,6 +2,18 @@
 
 Please update this file right before tagging a new release
 
+## v2.0.0
+
+* require PHP 8.2+ and `symfony/property-access` 5.4/6.x/7.x
+* merge the [TomAtomCZ/GraphQL](https://github.com/TomAtomCZ/GraphQL) fork: PHP 8 modernization (typed properties, return types) and many type-related bugfixes
+* update the test suite to PHPUnit 9.6 (`expectException()` calls, PHPUnit 9 XML schema, `ProphecyTrait`)
+* fix all PHP 8.2 deprecations in `src/`
+* deduplicate identical error messages in error containers (behavior change)
+* `DateType` is now implemented on top of `DateTimeType` and its `parseValue()` returns a `DateTime` (behavior change)
+* `SchemaDirectivesList::addDirectives()` and other strictly typed methods now throw `TypeError` instead of `Exception` on invalid argument types (behavior change)
+* `TypeService::getPropertyValue()` on objects relying on magic `__get` now requires `__isset` to be defined (symfony/property-access 6+ behavior)
+* replace Travis CI with GitHub Actions (PHP 8.2/8.3/8.4 × Symfony 5.4 lowest/6.4/7.x, phpstan)
+
 ## v1.7.1
 
 * relaxed symfony/property-accessor version constraints so the package can be installed in Symfony 4.x projects

@@ -18,17 +18,17 @@ class TestField extends AbstractField
     /**
      * @return AbstractObjectType
      */
-    public function getType()
+    public function getType(): \Youshido\GraphQL\Type\Scalar\IntType
     {
         return new IntType();
     }
 
-    public function resolve($value, array $args, ResolveInfo $info)
+    public function resolve($value, array $args, ResolveInfo $info): mixed
     {
         return $value;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'description';
     }

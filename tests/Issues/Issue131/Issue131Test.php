@@ -15,7 +15,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class Issue131Test extends TestCase
 {
 
-    public function testInternalVariableArgument()
+    public function testInternalVariableArgument(): void
     {
 
 
@@ -47,7 +47,7 @@ class Issue131Test extends TestCase
                                 ]
                             ]))
                         ],
-                        'resolve' => function ($source, $args) {
+                        'resolve' => static function ($source, array $args) : array {
                             return [
                                 'id' => '1',
                                 'name' => sprintf('Meeting with %d beans', count($args['related_beans'])),

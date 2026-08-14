@@ -4,3 +4,8 @@ vendor/
 data/schema.graphql
 composer.lock
 .idea
+docker-compose.yml
+Dockerfile
+docker/
+.env.local.phpunit.result.cache
+.phpunit.result.cache

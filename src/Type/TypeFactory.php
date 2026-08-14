@@ -8,33 +8,32 @@
 
 namespace Youshido\GraphQL\Type;
 
-
 use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 
 class TypeFactory
 {
-    private static $objectsHash = [];
+    private static array $objectsHash = [];
 
     /**
-     * @param string $type
      *
      * @throws ConfigurationException
-     * @return AbstractScalarType
      */
-    public static function getScalarType($type)
+    public static function getScalarType(AbstractScalarType|string $type): ?AbstractScalarType
     {
         if (TypeService::isScalarType($type)) {
-            if (is_object($type)) {
+            if ($type instanceof AbstractScalarType) {
                 return $type;
             }
+
             if (empty(self::$objectsHash[$type])) {
                 $name = ucfirst($type);
 
-                $name = $name == 'Datetime' ? 'DateTime' : $name;
-                $name = $name == 'Datetimetz' ? 'DateTimeTz' : $name;
+                $name = $name === 'Datetime' ? 'DateTime' : $name;
+                $name = $name === 'Datetimetz' ? 'DateTimeTz' : $name;
 
-                $className                = 'Youshido\GraphQL\Type\Scalar\\' . $name . 'Type';
+                $className = 'Youshido\GraphQL\Type\Scalar\\' . $name . 'Type';
+
                 self::$objectsHash[$type] = new $className();
             }
 
@@ -47,7 +46,7 @@ class TypeFactory
     /**
      * @return string[]
      */
-    public static function getScalarTypesNames()
+    public static function getScalarTypesNames(): array
     {
         return [
             TypeMap::TYPE_INT,
@@ -58,7 +57,7 @@ class TypeFactory
             TypeMap::TYPE_DATETIME,
             TypeMap::TYPE_DATE,
             TypeMap::TYPE_TIMESTAMP,
-            TypeMap::TYPE_DATETIMETZ,
+            TypeMap::TYPE_DATETIMETZ
         ];
     }
 }

@@ -19,9 +19,10 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class LoadTest extends TestCase
 {
 
-    public function testLoad10k()
+    public function testLoad10k(): bool
     {
-        $time = microtime(true);
+        $this->expectNotToPerformAssertions();
+        microtime(true);
         $postType = new ObjectType([
             'name'   => 'Post',
             'fields' => [
@@ -46,6 +47,7 @@ class LoadTest extends TestCase
                     'name' => 'Author ' . substr(md5(time()), 0, 4)
                 ];
             }
+            
             $data[] = [
                 'id'      => $i,
                 'title'   => 'Title of ' . $i,
@@ -53,13 +55,13 @@ class LoadTest extends TestCase
             ];
         }
 
-        $p = new Processor(new Schema([
+        new Processor(new Schema([
             'query' => new ObjectType([
                 'name' => 'RootQuery',
                 'fields' => [
                     'posts' => [
                         'type' => new ListType($postType),
-                        'resolve' => function() use ($data) {
+                        'resolve' => static function () use ($data) {
                             return $data;
                         }
                     ]
@@ -67,11 +69,6 @@ class LoadTest extends TestCase
             ]),
         ]));
         return true;
-        $p->processPayload('{ posts { id, title, authors { name } } }');
-        $res = $p->getResponseData();
-        echo "Count: " . count($res['data']['posts']) . "\n";
-        var_dump($res['data']['posts'][0]);
-        printf("Test Time: %04f\n", microtime(true) - $time);
     }
 
 }

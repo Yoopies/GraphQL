@@ -19,47 +19,42 @@ use Youshido\Tests\DataProvider\TestInterfaceType;
 class InterfaceTypeConfigTest extends TestCase
 {
 
-    public function testCreation()
+    public function testCreation(): void
     {
         $config = new InterfaceTypeConfig(['name' => 'Test'], null, false);
         $this->assertEquals($config->getName(), 'Test', 'Normal creation');
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testConfigNoFields()
+    public function testConfigNoFields(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         ConfigValidator::getInstance()->assertValidConfig(
-            new InterfaceTypeConfig(['name' => 'Test', 'resolveType' => function () { }], null, true)
+            new InterfaceTypeConfig(['name' => 'Test', 'resolveType' => static function () : void {
+            }], null, true)
         );
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testConfigNoResolve()
+    public function testConfigNoResolve(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         ConfigValidator::getInstance()->assertValidConfig(
             new InterfaceTypeConfig(['name' => 'Test', 'fields' => ['id' => new IntType()]], null, true)
         );
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testConfigInvalidResolve()
+    public function testConfigInvalidResolve(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $config = new InterfaceTypeConfig(['name' => 'Test', 'fields' => ['id' => new IntType()]], null, false);
         $config->resolveType(['invalid object']);
     }
 
-    public function testInterfaces()
+    public function testInterfaces(): void
     {
         $interfaceConfig = new InterfaceTypeConfig([
             'name'        => 'Test',
             'fields'      => ['id' => new IntType()],
-            'resolveType' => function ($object) {
+            'resolveType' => static function ($object) {
                 return $object->getType();
             }
         ], null, true);

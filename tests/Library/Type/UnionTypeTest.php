@@ -18,7 +18,7 @@ use Youshido\Tests\DataProvider\TestUnionType;
 class UnionTypeTest extends TestCase
 {
 
-    public function testInlineCreation()
+    public function testInlineCreation(): void
     {
         $object = new ObjectType([
             'name' => 'TestObject',
@@ -32,7 +32,7 @@ class UnionTypeTest extends TestCase
                 new TestObjectType(),
                 $object
             ],
-            'resolveType' => function ($type) {
+            'resolveType' => static function ($type) {
                 return $type;
             }
         ]);
@@ -46,7 +46,7 @@ class UnionTypeTest extends TestCase
         $this->assertTrue($type->isValidValue(true));
     }
 
-    public function testObjectCreation()
+    public function testObjectCreation(): void
     {
         $type = new TestUnionType();
 
@@ -56,36 +56,32 @@ class UnionTypeTest extends TestCase
         $this->assertEquals('test', $type->resolveType('test'));
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testInvalidTypesWithScalar()
+    public function testInvalidTypesWithScalar(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $type = new UnionType([
             'name'        => 'Car',
             'description' => 'Union collect cars types',
             'types'       => [
                 'test', new IntType()
             ],
-            'resolveType' => function ($type) {
+            'resolveType' => static function ($type) {
                 return $type;
             }
         ]);
         ConfigValidator::getInstance()->assertValidConfig($type->getConfig());
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testInvalidTypes()
+    public function testInvalidTypes(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $type = new UnionType([
             'name'        => 'Car',
             'description' => 'Union collect cars types',
             'types'       => [
                 new IntType()
             ],
-            'resolveType' => function ($type) {
+            'resolveType' => static function ($type) {
                 return $type;
             }
         ]);

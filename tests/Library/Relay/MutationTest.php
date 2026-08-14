@@ -17,27 +17,25 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 class MutationTest extends TestCase
 {
 
-    public function testCreation()
+    public function testCreation(): void
     {
         $mutation = RelayMutation::buildMutation('ship', [
             'name' => new StringType()
         ],[
             'id' => new IdType(),
             'name' => new StringType()
-        ], function($source, $args, $info) {
-
+        ], static function ($source, $args, $info) : void {
         });
         $this->assertEquals('ship', $mutation->getName());
     }
 
-    /**
-     * @expectedException \Exception
-     */
-    public function testInvalidType()
+    public function testInvalidType(): void
     {
+        $this->expectException(\Exception::class);
         RelayMutation::buildMutation('ship', [
             'name' => new StringType()
-        ], new IntType(), function($source, $args, $info) {});
+        ], new IntType(), static function ($source, $args, $info) : void {
+        });
 
     }
 

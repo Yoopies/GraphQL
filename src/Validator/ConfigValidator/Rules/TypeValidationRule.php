@@ -9,6 +9,7 @@
 namespace Youshido\GraphQL\Validator\ConfigValidator\Rules;
 
 
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\FieldInterface;
 use Youshido\GraphQL\Field\InputFieldInterface;
 use Youshido\GraphQL\Type\AbstractType;
@@ -18,72 +19,45 @@ use Youshido\GraphQL\Validator\ConfigValidator\ConfigValidator;
 
 class TypeValidationRule implements ValidationRuleInterface
 {
-
-    private $configValidator;
+    private readonly ConfigValidator $configValidator;
 
     public function __construct(ConfigValidator $validator)
     {
         $this->configValidator = $validator;
     }
 
-    public function validate($data, $ruleInfo)
+    /**
+     * @throws ConfigurationException
+     */
+    public function validate($data, $ruleInfo): bool
     {
-        if (!is_string($ruleInfo)) return false;
-
-        switch ($ruleInfo) {
-            case TypeService::TYPE_ANY:
-                return true;
-
-            case TypeService::TYPE_ANY_OBJECT:
-                return is_object($data);
-
-            case TypeService::TYPE_CALLABLE:
-                return is_callable($data);
-
-            case TypeService::TYPE_BOOLEAN:
-                return is_bool($data);
-
-            case TypeService::TYPE_ARRAY:
-                return is_array($data);
-
-            case TypeService::TYPE_STRING:
-                return TypeFactory::getScalarType($ruleInfo)->isValidValue($data);
-
-            case TypeService::TYPE_GRAPHQL_TYPE:
-                return TypeService::isGraphQLType($data);
-
-            case TypeService::TYPE_OBJECT_TYPE:
-                return TypeService::isObjectType($data);
-
-            case TypeService::TYPE_ARRAY_OF_OBJECT_TYPES:
-                return $this->isArrayOfObjectTypes($data);
-
-            case TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG:
-                return $this->isArrayOfFields($data);
-
-            case TypeService::TYPE_OBJECT_INPUT_TYPE:
-                return TypeService::isInputObjectType($data);
-
-            case TypeService::TYPE_ENUM_VALUES:
-                return $this->isEnumValues($data);
-
-            case TypeService::TYPE_ARRAY_OF_INPUT_FIELDS:
-                return $this->isArrayOfInputFields($data);
-
-            case TypeService::TYPE_ANY_INPUT:
-                return TypeService::isInputType($data);
-
-            case TypeService::TYPE_ARRAY_OF_INTERFACES:
-                return $this->isArrayOfInterfaces($data);
-
-            default:
-                return false;
+        if (!is_string($ruleInfo)) {
+            return false;
         }
+
+        return match ($ruleInfo) {
+            TypeService::TYPE_ANY => true,
+            TypeService::TYPE_ANY_OBJECT => is_object($data),
+            TypeService::TYPE_CALLABLE => is_callable($data),
+            TypeService::TYPE_BOOLEAN => is_bool($data),
+            TypeService::TYPE_ARRAY => is_array($data),
+            TypeService::TYPE_STRING => TypeFactory::getScalarType($ruleInfo)->isValidValue($data),
+            TypeService::TYPE_GRAPHQL_TYPE => TypeService::isGraphQLType($data),
+            TypeService::TYPE_OBJECT_TYPE => TypeService::isObjectType($data),
+            TypeService::TYPE_ARRAY_OF_OBJECT_TYPES => $this->isArrayOfObjectTypes($data),
+            TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG => $this->isArrayOfFields($data),
+            TypeService::TYPE_OBJECT_INPUT_TYPE => TypeService::isInputObjectType($data),
+            TypeService::TYPE_ENUM_VALUES => $this->isEnumValues($data),
+            TypeService::TYPE_ARRAY_OF_INPUT_FIELDS => $this->isArrayOfInputFields($data),
+            TypeService::TYPE_ANY_INPUT => TypeService::isInputType($data),
+            TypeService::TYPE_ARRAY_OF_INTERFACES => $this->isArrayOfInterfaces($data),
+            default => false,
+        };
     }
 
-    private function isArrayOfObjectTypes($data)
+    private function isArrayOfObjectTypes($data): bool
     {
-        if (!is_array($data) || !count($data)) {
+        if (!is_array($data) || $data === []) {
             return false;
         }
 
@@ -96,9 +70,11 @@ class TypeValidationRule implements ValidationRuleInterface
         return true;
     }
 
-    private function isEnumValues($data)
+    private function isEnumValues($data): bool
     {
-        if (!is_array($data) || empty($data)) return false;
+        if (!is_array($data) || $data === []) {
+            return false;
+        }
 
         foreach ($data as $item) {
             if (!is_array($item) || !array_key_exists('name', $item) || !is_string($item['name']) || !preg_match('/^[_a-zA-Z][_a-zA-Z0-9]*$/', $item['name'])) {
@@ -113,9 +89,11 @@ class TypeValidationRule implements ValidationRuleInterface
         return true;
     }
 
-    private static function isArrayOfInterfaces($data)
+    private function isArrayOfInterfaces($data): bool
     {
-        if (!is_array($data)) return false;
+        if (!is_array($data)) {
+            return false;
+        }
 
         foreach ($data as $item) {
             if (!TypeService::isInterface($item)) {
@@ -126,18 +104,22 @@ class TypeValidationRule implements ValidationRuleInterface
         return true;
     }
 
-    private function isArrayOfFields($data)
+    private function isArrayOfFields($data): bool
     {
-        if (!is_array($data) || empty($data)) return false;
+        if (!is_array($data) || $data === []) {
+            return false;
+        }
 
         foreach ($data as $name => $item) {
-            if (!$this->isField($item, $name)) return false;
+            if (!$this->isField($item, $name)) {
+                return false;
+            }
         }
 
         return true;
     }
 
-    private function isField($data, $name = null)
+    private function isField($data, $name = null): bool
     {
         if (is_object($data)) {
             if (($data instanceof FieldInterface) || ($data instanceof AbstractType)) {
@@ -146,6 +128,7 @@ class TypeValidationRule implements ValidationRuleInterface
                 return false;
             }
         }
+
         if (!is_array($data)) {
             $data = [
                 'type' => $data,
@@ -154,23 +137,28 @@ class TypeValidationRule implements ValidationRuleInterface
         } elseif (empty($data['name'])) {
             $data['name'] = $name;
         }
+
         $this->configValidator->validate($data, $this->getFieldConfigRules());
 
         return $this->configValidator->isValid();
     }
 
-    private function isArrayOfInputFields($data)
+    private function isArrayOfInputFields($data): bool
     {
-        if (!is_array($data)) return false;
+        if (!is_array($data)) {
+            return false;
+        }
 
-        foreach ($data as $name => $item) {
-            if (!$this->isInputField($item)) return false;
+        foreach ($data as $item) {
+            if (!$this->isInputField($item)) {
+                return false;
+            }
         }
 
         return true;
     }
 
-    private function isInputField($data)
+    private function isInputField($data): bool
     {
         if (is_object($data)) {
             if ($data instanceof InputFieldInterface) {
@@ -189,20 +177,18 @@ class TypeValidationRule implements ValidationRuleInterface
 
     /**
      * Exists for the performance
-     * @return array
      */
-    private function getFieldConfigRules()
+    private function getFieldConfigRules(): array
     {
         return [
-            'name'              => ['type' => TypeService::TYPE_STRING, 'required' => true],
-            'type'              => ['type' => TypeService::TYPE_ANY, 'required' => true],
-            'args'              => ['type' => TypeService::TYPE_ARRAY],
-            'description'       => ['type' => TypeService::TYPE_STRING],
-            'resolve'           => ['type' => TypeService::TYPE_CALLABLE],
-            'isDeprecated'      => ['type' => TypeService::TYPE_BOOLEAN],
+            'name' => ['type' => TypeService::TYPE_STRING, 'required' => true],
+            'type' => ['type' => TypeService::TYPE_ANY, 'required' => true],
+            'args' => ['type' => TypeService::TYPE_ARRAY],
+            'description' => ['type' => TypeService::TYPE_STRING],
+            'resolve' => ['type' => TypeService::TYPE_CALLABLE],
+            'isDeprecated' => ['type' => TypeService::TYPE_BOOLEAN],
             'deprecationReason' => ['type' => TypeService::TYPE_STRING],
-            'cost'              => ['type' => TypeService::TYPE_ANY]
+            'cost' => ['type' => TypeService::TYPE_ANY]
         ];
     }
-
 }

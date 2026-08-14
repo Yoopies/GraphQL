@@ -21,30 +21,24 @@ use Youshido\Tests\DataProvider\TestObjectType;
 class ObjectTypeTest extends TestCase
 {
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testCreatingInvalidObject()
+    public function testCreatingInvalidObject(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         new ObjectType([]);
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testInvalidNameParam()
+    public function testInvalidNameParam(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $type = new ObjectType([
             'name' => null
         ]);
         ConfigValidator::getInstance()->assertValidConfig($type->getConfig());
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
-     */
-    public function testInvalidFieldsParam()
+    public function testInvalidFieldsParam(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $type = new ObjectType([
             'name'   => 'SomeName',
             'fields' => []
@@ -52,11 +46,9 @@ class ObjectTypeTest extends TestCase
         ConfigValidator::getInstance()->assertValidConfig($type->getConfig());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testSerialize()
+    public function testSerialize(): void
     {
+        $this->expectException(\InvalidArgumentException::class);
         $object = new ObjectType([
             'name'   => 'SomeName',
             'fields' => [
@@ -67,7 +59,7 @@ class ObjectTypeTest extends TestCase
     }
 
 
-    public function testNormalCreatingParam()
+    public function testNormalCreatingParam(): void
     {
         $objectType = new ObjectType([
             'name'        => 'Post',
@@ -89,7 +81,7 @@ class ObjectTypeTest extends TestCase
         $this->assertEquals('Post type description', $objectType->getDescription());
     }
 
-    public function testFieldsTrait()
+    public function testFieldsTrait(): void
     {
         $idField = new Field(['name' => 'id', 'type' => new IntType()]);
         $nameField = new Field(['name' => 'name', 'type' => new StringType()]);
@@ -113,7 +105,7 @@ class ObjectTypeTest extends TestCase
         ], $objectType->getFields());
     }
 
-    public function testExtendedClass()
+    public function testExtendedClass(): void
     {
         $objectType = new TestObjectType();
         $this->assertEquals($objectType->getName(), 'TestObject');
@@ -122,7 +114,7 @@ class ObjectTypeTest extends TestCase
         $this->assertNull($objectType->getDescription());
     }
 
-    public function testMutationObjectClass()
+    public function testMutationObjectClass(): void
     {
         $mutation = new TestMutationObjectType();
         $this->assertEquals(new StringType(), $mutation->getType());

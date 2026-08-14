@@ -25,7 +25,7 @@ use Youshido\Tests\DataProvider\TestInputField;
 class InputFieldTest extends TestCase
 {
 
-    private $introspectionQuery = <<<TEXT
+    private string $introspectionQuery = <<<TEXT
 
 query IntrospectionQuery {
                 __schema {
@@ -105,7 +105,7 @@ query IntrospectionQuery {
             }
 TEXT;
 
-    public function testFieldWithInputFieldArgument()
+    public function testFieldWithInputFieldArgument(): void
     {
         $schema    = new Schema([
             'query' => new ObjectType([
@@ -130,10 +130,12 @@ TEXT;
             ])
         ]);
         $processor = new Processor($schema);
-        $processor->processPayload($this->introspectionQuery);
+        $response = $processor->processPayload($this->introspectionQuery)->getResponseData();
+
+        $this->assertArrayNotHasKey('errors', $response);
     }
 
-    public function testInlineInputFieldCreation()
+    public function testInlineInputFieldCreation(): void
     {
         $field = new InputField([
             'name'         => 'id',
@@ -149,7 +151,7 @@ TEXT;
     }
 
 
-    public function testObjectInputFieldCreation()
+    public function testObjectInputFieldCreation(): void
     {
         $field = new TestInputField();
 
@@ -159,8 +161,9 @@ TEXT;
         $this->assertEquals('default', $field->getDefaultValue());
     }
 
-    public function testListAsInputField()
+    public function testListAsInputField(): void
     {
+        $this->expectNotToPerformAssertions();
         new InputField([
             'name' => 'test',
             'type' => new ListType(new IntType()),
@@ -169,10 +172,10 @@ TEXT;
 
     /**
      * @dataProvider invalidInputFieldProvider
-     * @expectedException Youshido\GraphQL\Exception\ConfigurationException
      */
-    public function testInvalidInputFieldParams($fieldConfig)
+    public function testInvalidInputFieldParams($fieldConfig): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
         $field = new InputField($fieldConfig);
         ConfigValidator::getInstance()->assertValidConfig($field->getConfig());
     }

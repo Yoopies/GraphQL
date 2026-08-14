@@ -8,14 +8,18 @@
 namespace Youshido\GraphQL\Validator\ErrorContainer;
 
 
+use Exception;
+
 interface ErrorContainerInterface
 {
 
-    public function addError(\Exception $exception);
+    public function addError(Exception $exception);
 
     public function mergeErrors(ErrorContainerInterface $errorContainer);
 
     public function hasErrors();
+
+    public function hasError(Exception $exception);
 
     public function getErrors();
 

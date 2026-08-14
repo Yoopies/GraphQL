@@ -9,14 +9,16 @@
 namespace Youshido\GraphQL\Config\Traits;
 
 
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\InputField;
 
 trait ArgumentsAwareConfigTrait
 {
-    protected $arguments = [];
+    protected array $arguments = [];
+
     protected $_isArgumentsBuilt;
 
-    public function buildArguments()
+    public function buildArguments(): void
     {
         if ($this->_isArgumentsBuilt) {
             return;
@@ -25,15 +27,15 @@ trait ArgumentsAwareConfigTrait
         if (!empty($this->data['args'])) {
             $this->addArguments($this->data['args']);
         }
+
         $this->_isArgumentsBuilt = true;
     }
 
-    public function addArguments($argsList)
+    public function addArguments($argsList): static
     {
         foreach ($argsList as $argumentName => $argumentInfo) {
             if ($argumentInfo instanceof InputField) {
                 $this->arguments[$argumentInfo->getName()] = $argumentInfo;
-                continue;
             } else {
                 $this->addArgument($argumentName, $this->buildConfig($argumentName, $argumentInfo));
             }
@@ -42,17 +44,21 @@ trait ArgumentsAwareConfigTrait
         return $this;
     }
 
-    public function addArgument($argument, $argumentInfo = null)
+    /**
+     * @throws ConfigurationException
+     */
+    public function addArgument($argument, $argumentInfo = null): static
     {
         if (!($argument instanceof InputField)) {
             $argument = new InputField($this->buildConfig($argument, $argumentInfo));
         }
+
         $this->arguments[$argument->getName()] = $argument;
 
         return $this;
     }
 
-    protected function buildConfig($name, $info = null)
+    protected function buildConfig($name, $info = null): array
     {
         if (!is_array($info)) {
             return [
@@ -60,6 +66,7 @@ trait ArgumentsAwareConfigTrait
                 'name' => $name
             ];
         }
+
         if (empty($info['name'])) {
             $info['name'] = $name;
         }
@@ -69,25 +76,21 @@ trait ArgumentsAwareConfigTrait
 
     /**
      * @param $name
-     *
-     * @return InputField
      */
-    public function getArgument($name)
+    public function getArgument($name): ?InputField
     {
         return $this->hasArgument($name) ? $this->arguments[$name] : null;
     }
 
     /**
      * @param $name
-     *
-     * @return bool
      */
-    public function hasArgument($name)
+    public function hasArgument($name): bool
     {
         return array_key_exists($name, $this->arguments);
     }
 
-    public function hasArguments()
+    public function hasArguments(): bool
     {
         return !empty($this->arguments);
     }
@@ -95,12 +98,12 @@ trait ArgumentsAwareConfigTrait
     /**
      * @return InputField[]
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->arguments;
     }
 
-    public function removeArgument($name)
+    public function removeArgument($name): static
     {
         if ($this->hasArgument($name)) {
             unset($this->arguments[$name]);

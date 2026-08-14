@@ -23,7 +23,7 @@ use Youshido\GraphQL\Parser\Location;
 class AstTest extends TestCase
 {
 
-    public function testArgument()
+    public function testArgument(): void
     {
         $argument = new Argument('test', new Literal('test', new Location(1,1)), new Location(1,1));
 
@@ -37,7 +37,7 @@ class AstTest extends TestCase
         $this->assertEquals($argument->getValue(), 'some value');
     }
 
-    public function testField()
+    public function testField(): void
     {
         $field = new Field('field', null, [], [], new Location(1,1));
 
@@ -55,7 +55,7 @@ class AstTest extends TestCase
         $this->assertEquals(['argument' => 'argument value'], $field->getKeyValueArguments());
     }
 
-    public function testFragment()
+    public function testFragment(): void
     {
         $fields = [
             new Field('field', null, [], [], new Location(1,1))
@@ -84,7 +84,7 @@ class AstTest extends TestCase
         $this->assertTrue($fragment->isUsed());
     }
 
-    public function testFragmentReference()
+    public function testFragmentReference(): void
     {
         $reference = new FragmentReference('shipInfo', new Location(1,1));
 
@@ -94,7 +94,7 @@ class AstTest extends TestCase
         $this->assertEquals('largeShipInfo', $reference->getName());
     }
 
-    public function testTypedFragmentReference()
+    public function testTypedFragmentReference(): void
     {
         $fields = [
             new Field('id', null, [], [], new Location(1,1))
@@ -117,7 +117,7 @@ class AstTest extends TestCase
         $this->assertEquals($newFields, $reference->getFields());
     }
 
-    public function testQuery()
+    public function testQuery(): void
     {
         $arguments = [
             new Argument('limit', new Literal('10', new Location(1,1)), new Location(1,1))
@@ -151,7 +151,7 @@ class AstTest extends TestCase
         $this->assertTrue($query->hasArguments());
     }
 
-    public function testArgumentValues()
+    public function testArgumentValues(): void
     {
         $list = new InputList(['a', 'b'], new Location(1,1));
         $this->assertEquals(['a', 'b'], $list->getValue());
@@ -169,9 +169,9 @@ class AstTest extends TestCase
         $this->assertEquals('new text', $literal->getValue());
     }
 
-    public function testVariable()
+    public function testVariable(): void
     {
-        $variable = new Variable('id', 'int', false, false, true, new Location(1,1));
+        $variable = new Variable('id', 'int', false, false, new Location(1,1), true);
 
         $this->assertEquals('id', $variable->getName());
         $this->assertEquals('int', $variable->getTypeName());
@@ -194,12 +194,10 @@ class AstTest extends TestCase
         $this->assertEquals(new Literal('text', new Location(1,1)), $variable->getValue());
     }
 
-    /**
-     * @expectedException \LogicException
-     */
-    public function testVariableLogicException()
+    public function testVariableLogicException(): void
     {
-        $variable = new Variable('id', 'int', false, false, true, new Location(1,1));
+        $this->expectException(\LogicException::class);
+        $variable = new Variable('id', 'int', false, false, new Location(1,1), true);
         $variable->getValue();
     }
 }

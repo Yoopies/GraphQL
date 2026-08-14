@@ -10,6 +10,7 @@ namespace Youshido\GraphQL\Relay\Field;
 
 
 use Youshido\GraphQL\Config\Field\FieldConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Execution\ResolveInfo;
 use Youshido\GraphQL\Field\AbstractField;
 use Youshido\GraphQL\Field\InputField;
@@ -21,51 +22,49 @@ use Youshido\GraphQL\Type\Scalar\IdType;
 
 class NodeField extends AbstractField
 {
+    protected FetcherInterface $fetcher;
 
-    /** @var  FetcherInterface */
-    protected $fetcher;
-
-    /** @var NodeInterfaceType */
-    protected $type;
+    protected NodeInterfaceType $type;
 
     public function __construct(FetcherInterface $fetcher)
     {
         $this->fetcher = $fetcher;
-        $this->type    = (new NodeInterfaceType())->setFetcher($this->fetcher);
+        $this->type = (new NodeInterfaceType())->setFetcher($this->fetcher);
 
-        parent::__construct([]);
+        parent::__construct();
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'node';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Fetches an object given its ID';
     }
 
-    public function build(FieldConfig $config)
+    /**
+     * @throws ConfigurationException
+     */
+    public function build(FieldConfig $config): void
     {
         $config->addArgument(new InputField([
-            'name'        => 'id',
-            'type'        => new NonNullType(new IdType()),
+            'name' => 'id',
+            'type' => new NonNullType(new IdType()),
             'description' => 'The ID of an object'
         ]));
     }
 
-    public function getType()
+    public function getType(): mixed
     {
         return $this->type;
     }
 
-    public function resolve($value, array $args, ResolveInfo $info)
+    public function resolve($value, array $args, ResolveInfo $info): mixed
     {
         list($type, $id) = Node::fromGlobalId($args['id']);
 
         return $this->fetcher->resolveNode($type, $id);
     }
-
-
 }

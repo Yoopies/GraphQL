@@ -14,7 +14,7 @@ use Youshido\GraphQL\Relay\Node;
 
 class NodeTest extends TestCase
 {
-    public function testMethods()
+    public function testMethods(): void
     {
         $global     = Node::toGlobalId('user', 1);
         $fromGlobal = Node::fromGlobalId($global);
@@ -35,9 +35,9 @@ class NodeTest extends TestCase
     /**
      * @dataProvider malformedIdProvider
      */
-    public function testFromGlobalIdThrowsExceptionIfGivenMalformedId($idToCheck)
+    public function testFromGlobalIdThrowsExceptionIfGivenMalformedId($idToCheck): void
     {
-        $this->setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         Node::fromGlobalId($idToCheck);
     }
 }

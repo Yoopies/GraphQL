@@ -16,67 +16,50 @@ class Field extends AbstractAst implements FieldInterface
     use AstArgumentsTrait;
     use AstDirectivesTrait;
 
-    /** @var string */
-    private $name;
+    private ?string $name;
 
-    /** @var string */
-    private $alias;
+    private ?string $alias;
 
     /**
-     * @param string   $name
-     * @param string   $alias
-     * @param array    $arguments
-     * @param array    $directives
-     * @param Location $location
+     * @param string $name
+     * @param string $alias
      */
     public function __construct($name, $alias, array $arguments, array $directives, Location $location)
     {
         parent::__construct($location);
 
-        $this->name      = $name;
-        $this->alias     = $alias;
+        $this->name = $name;
+        $this->alias = $alias;
         $this->setArguments($arguments);
         $this->setDirectives($directives);
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getAlias()
+    public function getAlias(): ?string
     {
         return $this->alias;
     }
 
-    /**
-     * @param null|string $alias
-     */
-    public function setAlias($alias)
+    public function setAlias(?string $alias): void
     {
         $this->alias = $alias;
     }
 
-    public function hasFields()
+    public function hasFields(): bool
     {
         return false;
     }
 
-    public function getFields()
+    public function getFields(): array
     {
         return [];
     }

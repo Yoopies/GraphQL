@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [master, develop, symfony-5, 'upgrade/**']
+  pull_request:
+
+jobs:
+  tests:
+    name: PHPUnit (PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+        symfony: ['6.4.*', '7.*']
+        include:
+          # Lowest supported dependency set (symfony/property-access 5.4)
+          - php: '8.2'
+            symfony: 'lowest'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring
+          coverage: none
+
+      - name: Restrict Symfony version
+        if: matrix.symfony != 'lowest'
+        run: composer require --no-update "symfony/property-access:${{ matrix.symfony }}"
+
+      - name: Install dependencies
+        run: |
+          if [ "${{ matrix.symfony }}" = "lowest" ]; then
+            composer update --prefer-lowest --prefer-dist --no-interaction --no-progress
+          else
+            composer update --prefer-dist --no-interaction --no-progress
+          fi
+
+      - name: Run tests
+        run: vendor/bin/phpunit
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Install PHPStan
+        run: composer require --dev phpstan/phpstan --no-interaction --no-progress
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyze src -c phpstan.neon -l 1

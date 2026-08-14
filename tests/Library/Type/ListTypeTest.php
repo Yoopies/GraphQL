@@ -17,7 +17,7 @@ use Youshido\Tests\DataProvider\TestListType;
 class ListTypeTest extends TestCase
 {
 
-    public function testInline()
+    public function testInline(): void
     {
         $listType = new ListType(new StringType());
         $this->assertEquals(new StringType(), $listType->getNamedType());
@@ -27,14 +27,15 @@ class ListTypeTest extends TestCase
         $this->assertFalse($listType->isValidValue('invalid value'));
     }
 
-    public function testStandaloneClass()
+    public function testStandaloneClass(): void
     {
         $listType = new TestListType();
         $this->assertEquals(new StringType(), $listType->getNamedType());
     }
 
-    public function testListOfInputsWithArguments()
+    public function testListOfInputsWithArguments(): void
     {
+        $this->expectNotToPerformAssertions();
 
     }
 

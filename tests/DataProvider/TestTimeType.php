@@ -9,41 +9,42 @@
 namespace Youshido\Tests\DataProvider;
 
 
+use DateTime;
 use Youshido\GraphQL\Type\Scalar\AbstractScalarType;
 
 class TestTimeType extends AbstractScalarType
 {
 
-    public function getName()
+    public function getName(): string
     {
         return 'TestTime';
     }
 
     /**
-     * @param $value \DateTime
-     * @return null|string
+     * @param $value DateTime
+     * @return string|DateTime|null
      */
-    public function serialize($value)
+    public function serialize($value): string|null|DateTime
     {
         if ($value === null) {
             return null;
         }
 
-        return $value instanceof \DateTime ? $value->format('H:i:s') : $value;
+        return $value instanceof DateTime ? $value->format('H:i:s') : $value;
     }
 
-    public function isValidValue($value)
+    public function isValidValue(mixed $value): bool
     {
         if (is_object($value)) {
             return true;
         }
 
-        $d = \DateTime::createFromFormat('H:i:s', $value);
+        $d = DateTime::createFromFormat('H:i:s', $value);
 
         return $d && $d->format('H:i:s') == $value;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Representation time in "H:i:s" format';
     }

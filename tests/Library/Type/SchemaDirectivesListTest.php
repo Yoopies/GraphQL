@@ -7,7 +7,7 @@ use Youshido\GraphQL\Type\SchemaDirectivesList;
 
 class SchemaDirectivesListTest extends TestCase
 {
-    public function testCanAddASingleDirective()
+    public function testCanAddASingleDirective(): void
     {
         $directiveList = new SchemaDirectivesList();
         $directiveList->addDirective(
@@ -18,7 +18,7 @@ class SchemaDirectivesListTest extends TestCase
         $this->assertTrue($directiveList->isDirectiveNameRegistered('testDirective'));
     }
 
-    public function testCanAddMultipleDirectives()
+    public function testCanAddMultipleDirectives(): void
     {
         $directiveList = new SchemaDirectivesList();
         $directiveList->addDirectives([
@@ -33,9 +33,9 @@ class SchemaDirectivesListTest extends TestCase
         $this->assertTrue($directiveList->isDirectiveNameRegistered('testDirectiveTwo'));
     }
 
-    public function testItThrowsExceptionWhenAddingInvalidDirectives()
+    public function testItThrowsExceptionWhenAddingInvalidDirectives(): void
     {
-        $this->setExpectedException(\Exception::class, "addDirectives accept only array of directives");
+        $this->expectException(\TypeError::class);
         $directiveList = new SchemaDirectivesList();
         $directiveList->addDirectives("foobar");
     }

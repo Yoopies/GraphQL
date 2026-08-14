@@ -9,23 +9,30 @@
 namespace Youshido\GraphQL\Type\Object;
 
 use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 
 final class ObjectType extends AbstractObjectType
 {
 
+    /**
+     * @throws ConfigurationException
+     */
     public function __construct(array $config)
     {
+        parent::__construct($config);
         $this->config = new ObjectTypeConfig($config, $this, true);
     }
 
     /**
      * @inheritdoc
-     * 
+     *
      * @codeCoverageIgnore
      */
-    public function build($config) { }
+    public function build(ObjectTypeConfig $config): void
+    {
+    }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->getConfigValue('name');
     }

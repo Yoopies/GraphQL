@@ -18,23 +18,19 @@ use Youshido\GraphQL\Validator\ConfigValidator\ConfigValidator;
 class SchemaValidator
 {
 
-    /** @var ConfigValidator */
-    private $configValidator = null;
     /**
-     * @param AbstractSchema $schema
-     *
      * @throws ConfigurationException
      */
-    public function validate(AbstractSchema $schema)
+    public function validate(AbstractSchema $schema): void
     {
         if (!$schema->getQueryType()->hasFields()) {
             throw new ConfigurationException('Schema has to have fields');
         }
 
-        $this->configValidator = ConfigValidator::getInstance();
+        $configValidator = ConfigValidator::getInstance();
 
         foreach ($schema->getQueryType()->getConfig()->getFields() as $field) {
-            $this->configValidator->assertValidConfig($field->getConfig());
+            $configValidator->assertValidConfig($field->getConfig());
 
             if ($field->getType() instanceof AbstractObjectType) {
                 $this->assertInterfaceImplementationCorrect($field->getType());
@@ -43,11 +39,9 @@ class SchemaValidator
     }
 
     /**
-     * @param AbstractObjectType $type
-     *
      * @throws ConfigurationException
      */
-    protected function assertInterfaceImplementationCorrect(AbstractObjectType $type)
+    protected function assertInterfaceImplementationCorrect(AbstractObjectType $type): void
     {
         if (!$type->getInterfaces()) {
             return;
@@ -61,18 +55,18 @@ class SchemaValidator
     }
 
     /**
-     * @param Field                 $intField
-     * @param Field                 $objField
-     * @param AbstractInterfaceType $interface
+     * @param Field $intField
+     * @param Field $objField
      *
      * @throws ConfigurationException
      */
-    protected function assertFieldsIdentical($intField, $objField, AbstractInterfaceType $interface)
+    protected function assertFieldsIdentical($intField, $objField, AbstractInterfaceType $interface): void
     {
         $isValid = true;
         if ($intField->getType()->isCompositeType() !== $objField->getType()->isCompositeType()) {
             $isValid = false;
         }
+
         if ($intField->getType()->getNamedType()->getName() != $objField->getType()->getNamedType()->getName()) {
             $isValid = false;
         }

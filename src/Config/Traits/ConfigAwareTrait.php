@@ -19,9 +19,10 @@ trait ConfigAwareTrait
 
     /** @var AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig */
     protected $config;
+
     protected $configCache = [];
 
-    public function getConfig()
+    public function getConfig(): AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig|null
     {
         return $this->config;
     }
@@ -31,13 +32,13 @@ trait ConfigAwareTrait
         if (array_key_exists($key, $this->configCache)) {
             return $this->configCache[$key];
         }
-        $this->configCache[$key] = !empty($this->config) ? $this->config->get($key, $defaultValue) : $defaultValue;
+
+        $this->configCache[$key] = empty($this->config) ? $defaultValue : $this->config->get($key, $defaultValue);
         return $this->configCache[$key];
     }
 
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->getConfigValue('description');
     }
-
 }

@@ -7,11 +7,8 @@ namespace Youshido\GraphQL\Type;
  * @author Alexandr Viniychuk <a@viniychuk.com>
  * created: 3:48 PM 4/29/16
  */
+
 interface CompositeTypeInterface
 {
-
-    /**
-     * @return AbstractType
-     */
-    public function getTypeOf();
+    public function getTypeOf(): mixed;
 }

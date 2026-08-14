@@ -7,6 +7,8 @@
 
 namespace Youshido\GraphQL\Introspection;
 
+use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
+use Youshido\GraphQL\Exception\ConfigurationException;
 use Youshido\GraphQL\Field\Field;
 use Youshido\GraphQL\Introspection\Field\TypesField;
 use Youshido\GraphQL\Schema\AbstractSchema;
@@ -19,7 +21,7 @@ class SchemaType extends AbstractObjectType
     /**
      * @return String type name
      */
-    public function getName()
+    public function getName(): string
     {
         return '__Schema';
     }
@@ -41,36 +43,38 @@ class SchemaType extends AbstractObjectType
         return null;
     }
 
-    public function resolveDirectives($value)
+    public function resolveDirectives($value): array
     {
         /** @var AbstractSchema|Field $value */
-        $dirs = $value->getDirectiveList()->getDirectives();
-        return $dirs;
+        return $value->getDirectiveList()->getDirectives();
     }
 
-    public function build($config)
+    /**
+     * @throws ConfigurationException
+     */
+    public function build(ObjectTypeConfig $config): void
     {
         $config
             ->addField(new Field([
-                'name'    => 'queryType',
-                'type'    => new QueryType(),
-                'resolve' => [$this, 'resolveQueryType']
+                'name' => 'queryType',
+                'type' => new QueryType(),
+                'resolve' => $this->resolveQueryType(...)
             ]))
             ->addField(new Field([
-                'name'    => 'mutationType',
-                'type'    => new QueryType(),
-                'resolve' => [$this, 'resolveMutationType']
+                'name' => 'mutationType',
+                'type' => new QueryType(),
+                'resolve' => $this->resolveMutationType(...)
             ]))
             ->addField(new Field([
-                'name'    => 'subscriptionType',
-                'type'    => new QueryType(),
-                'resolve' => [$this, 'resolveSubscriptionType']
+                'name' => 'subscriptionType',
+                'type' => new QueryType(),
+                'resolve' => $this->resolveSubscriptionType(...)
             ]))
             ->addField(new TypesField())
             ->addField(new Field([
-                'name'    => 'directives',
-                'type'    => new ListType(new DirectiveType()),
-                'resolve' => [$this, 'resolveDirectives']
+                'name' => 'directives',
+                'type' => new ListType(new DirectiveType()),
+                'resolve' => $this->resolveDirectives(...)
             ]));
     }
 }

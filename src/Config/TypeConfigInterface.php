@@ -12,12 +12,7 @@ use Youshido\GraphQL\Field\Field;
 
 interface TypeConfigInterface
 {
-
-    /**
-     * @param Field|string $field
-     * @param array        $fieldInfo
-     */
-    public function addField($field, $fieldInfo = null);
+    public function addField(Field|string $field, ?array $fieldInfo = null);
 
     public function getField($name);
 

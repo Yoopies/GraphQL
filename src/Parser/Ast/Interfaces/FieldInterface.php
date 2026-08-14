@@ -12,37 +12,19 @@ use Youshido\GraphQL\Parser\Ast\Argument;
 
 interface FieldInterface extends LocatableInterface
 {
+    public function getName(): string;
 
-    /**
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * @return string
-     */
-    public function getAlias();
+    public function getAlias(): ?string;
 
     /**
      * @return Argument[]
      */
-    public function getArguments();
+    public function getArguments(): array;
 
-    /**
-     * @param string $name
-     *
-     * @return Argument
-     */
-    public function getArgument($name);
+    public function getArgument(string $name);
 
-    /**
-     * @return bool
-     */
-    public function hasFields();
+    public function hasFields(): bool;
 
-    /**
-     * @return array
-     */
-    public function getFields();
+    public function getFields(): array;
 
 }

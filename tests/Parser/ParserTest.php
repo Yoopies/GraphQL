@@ -24,7 +24,7 @@ use Youshido\GraphQL\Parser\Parser;
 use Youshido\GraphQL\Parser\Token;
 
 class TokenizerTestingParser extends Parser {
-    public function initTokenizerForTesting($source) {
+    public function initTokenizerForTesting($source): void {
         $this->initTokenizer($source);
     }
 
@@ -36,7 +36,7 @@ class TokenizerTestingParser extends Parser {
 class ParserTest extends TestCase
 {
 
-    public function testEmptyParser()
+    public function testEmptyParser(): void
     {
         $parser = new Parser();
 
@@ -50,13 +50,11 @@ class ParserTest extends TestCase
         ], $parser->parse());
     }
 
-    /**
-     * @expectedException Youshido\GraphQL\Exception\Parser\SyntaxErrorException
-     */
-    public function testInvalidSelection()
+    public function testInvalidSelection(): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\Parser\SyntaxErrorException::class);
         $parser = new Parser();
-        $data   = $parser->parse('
+        $parser->parse('
         {
             test {
                 id
@@ -68,7 +66,7 @@ class ParserTest extends TestCase
         ');
     }
 
-    public function testComments()
+    public function testComments(): void
     {
         $query = <<<GRAPHQL
 # asdasd "asdasdasd"
@@ -102,7 +100,7 @@ GRAPHQL;
         ]);
     }
 
-    private function tokenizeStringContents($graphQLString) {
+    private function tokenizeStringContents(string $graphQLString) {
         $parser = new TokenizerTestingParser();
         $parser->initTokenizerForTesting('"' . $graphQLString . '"');
 
@@ -110,7 +108,7 @@ GRAPHQL;
     }
 
 
-    public function testEscapedStrings()
+    public function testEscapedStrings(): void
     {
         $this->assertEquals([
                 $this->tokenizeStringContents(""),           
@@ -141,16 +139,16 @@ GRAPHQL;
      * @param $query string
      *
      * @dataProvider wrongQueriesProvider
-     * @expectedException Youshido\GraphQL\Exception\Parser\SyntaxErrorException
      */
-    public function testWrongQueries($query)
+    public function testWrongQueries($query): void
     {
+        $this->expectException(\Youshido\GraphQL\Exception\Parser\SyntaxErrorException::class);
         $parser = new Parser();
 
         $parser->parse($query);
     }
 
-    public function testCommas()
+    public function testCommas(): void
     {
         $parser = new Parser();
         $data   = $parser->parse('{ foo,       ,,  , bar  }');
@@ -160,7 +158,7 @@ GRAPHQL;
         ], $data['queries']);
     }
 
-    public function testQueryWithNoFields()
+    public function testQueryWithNoFields(): void
     {
         $parser = new Parser();
         $data   = $parser->parse('{ name }');
@@ -176,7 +174,7 @@ GRAPHQL;
         ], $data);
     }
 
-    public function testQueryWithFields()
+    public function testQueryWithFields(): void
     {
         $parser = new Parser();
         $data   = $parser->parse('{ post, user { name } }');
@@ -195,7 +193,7 @@ GRAPHQL;
         ], $data);
     }
 
-    public function testFragmentWithFields()
+    public function testFragmentWithFields(): void
     {
         $parser = new Parser();
         $data   = $parser->parse('
@@ -222,7 +220,7 @@ GRAPHQL;
         ], $data);
     }
 
-    public function testInspectionQuery()
+    public function testInspectionQuery(): void
     {
         $parser = new Parser();
 
@@ -422,7 +420,7 @@ GRAPHQL;
     /**
      * @dataProvider mutationProvider
      */
-    public function testMutations($query, $structure)
+    public function testMutations($query, $structure): void
     {
         $parser = new Parser();
 
@@ -431,7 +429,7 @@ GRAPHQL;
         $this->assertEquals($parsedStructure, $structure);
     }
 
-    public function testTypedFragment()
+    public function testTypedFragment(): void
     {
         $parser          = new Parser();
         $parsedStructure = $parser->parse('
@@ -470,7 +468,7 @@ GRAPHQL;
                     'queries'            => [
                         new Query('query', null,
                             [
-                                new Argument('teas', new VariableReference('variable', (new Variable('variable', 'Int', false, false, true, new Location(1, 8)))->setUsed(true), new Location(1, 39)), new Location(1, 33)),
+                                new Argument('teas', new VariableReference('variable', new Location(1, 39), (new Variable('variable', 'Int', false, false, new Location(1, 8), true))->setUsed(true)), new Location(1, 33)),
                             ],
                             [
                                 new Field('name', 'alias', [], [], new Location(1, 60)),
@@ -480,10 +478,10 @@ GRAPHQL;
                     'fragments'          => [],
                     'fragmentReferences' => [],
                     'variables'          => [
-                        (new Variable('variable', 'Int', false, false, true, new Location(1, 8)))->setUsed(true),
+                        (new Variable('variable', 'Int', false, false, new Location(1, 8), true))->setUsed(true),
                     ],
                     'variableReferences' => [
-                        new VariableReference('variable', (new Variable('variable', 'Int', false, false, true, new Location(1, 8)))->setUsed(true), new Location(1, 39)),
+                        new VariableReference('variable', new Location(1, 39), (new Variable('variable', 'Int', false, false, new Location(1, 8), true))->setUsed(true)),
                     ],
                 ],
             ],
@@ -553,7 +551,7 @@ GRAPHQL;
     /**
      * @dataProvider queryProvider
      */
-    public function testParser($query, $structure)
+    public function testParser($query, $structure): void
     {
         $parser          = new Parser();
         $parsedStructure = $parser->parse($query);
@@ -831,7 +829,7 @@ GRAPHQL;
         ];
     }
 
-    public function testVariablesInQuery()
+    public function testVariablesInQuery(): void
     {
         $parser = new Parser();
 
@@ -874,7 +872,7 @@ GRAPHQL;
         $this->assertArrayNotHasKey('errors', $data);
     }
 
-    public function testVariableDefaultValue()
+    public function testVariableDefaultValue(): void
     {
         // Test with non-null default value
         $parser          = new Parser();

@@ -9,17 +9,12 @@
 namespace Youshido\GraphQL\Field;
 
 
-use Youshido\GraphQL\Type\Object\AbstractObjectType;
-
 final class InputField extends AbstractInputField
 {
 
-    protected $isFinal = false;
+    protected bool $isFinal = false;
 
-    /**
-     * @return AbstractObjectType
-     */
-    public function getType()
+    public function getType(): mixed
     {
         return $this->getConfigValue('type');
     }
