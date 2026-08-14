@@ -8,3 +8,4 @@ docker-compose.yml
 Dockerfile
 docker/
 .env.local.phpunit.result.cache
+.phpunit.result.cache
