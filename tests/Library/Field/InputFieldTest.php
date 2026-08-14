@@ -8,7 +8,7 @@
 
 namespace Youshido\Tests\Library\Field;
 
-
+use PHPUnit\Framework\TestCase;
 use Youshido\GraphQL\Execution\Processor;
 use Youshido\GraphQL\Field\InputField;
 use Youshido\GraphQL\Schema\Schema;
@@ -22,7 +22,7 @@ use Youshido\GraphQL\Type\Scalar\StringType;
 use Youshido\GraphQL\Validator\ConfigValidator\ConfigValidator;
 use Youshido\Tests\DataProvider\TestInputField;
 
-class InputFieldTest extends \PHPUnit_Framework_TestCase
+class InputFieldTest extends TestCase
 {
 
     private $introspectionQuery = <<<TEXT

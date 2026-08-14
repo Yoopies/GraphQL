@@ -2,7 +2,7 @@
 
 namespace Youshido\Tests\Schema;
 
-use Youshido\GraphQL\Execution\Processor;
+use PHPUnit\Framework\TestCase;use Youshido\GraphQL\Execution\Processor;
 use Youshido\GraphQL\Schema\Schema;
 use Youshido\GraphQL\Type\ListType\ListType;
 use Youshido\GraphQL\Type\NonNullType;
@@ -10,7 +10,7 @@ use Youshido\GraphQL\Type\Object\ObjectType;
 use Youshido\GraphQL\Type\Scalar\IdType;
 use Youshido\GraphQL\Type\Scalar\StringType;
 
-class VariablesTest extends \PHPUnit_Framework_TestCase
+class VariablesTest extends TestCase
 {
     public function testInvalidNullableList()
     {
