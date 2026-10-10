@@ -2,6 +2,10 @@
 
 Please update this file right before tagging a new release
 
+## v2.1.0
+
+* require `symfony/property-access` ^6.4 || ^7.0 (drop Symfony 5.4 support)
+
 ## v2.0.0
 
 * require PHP 8.2+ and `symfony/property-access` 5.4/6.x/7.x

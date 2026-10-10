@@ -15,7 +15,7 @@ jobs:
         php: ['8.2', '8.3', '8.4']
         symfony: ['6.4.*', '7.*']
         include:
-          # Lowest supported dependency set (symfony/property-access 5.4)
+          # Lowest supported dependency set (symfony/property-access 6.4)
           - php: '8.2'
             symfony: 'lowest'
     steps:
