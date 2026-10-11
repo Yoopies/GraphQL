@@ -1,3 +1,9 @@
+# Upgrade guide — Symfony 6.4–7.x (v2.1.0)
+
+- **symfony/property-access**: `^5.4 || ^6.0 || ^7.0` → `^6.4 || ^7.0`
+
+No API change: projects still on Symfony 5.4 must stay on v2.0.x.
+
 # Upgrade guide — PHP 8.2 / Symfony 5.4–7.x (v2.0.0)
 
 ## Requirements
@@ -49,5 +55,5 @@ on top of the Yoopies changes.
 ## Continuous integration
 
 Travis CI was replaced by GitHub Actions (`.github/workflows/ci.yml`):
-PHPUnit on PHP 8.2/8.3/8.4 against Symfony property-access 5.4 (lowest), 6.4 and 7.x,
+PHPUnit on PHP 8.2/8.3/8.4 against Symfony property-access 6.4 (lowest) and 7.x,
 plus a phpstan (level 1) job.
